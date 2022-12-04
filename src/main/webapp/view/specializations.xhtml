@@ -22,21 +22,13 @@
 
     <h:form>
         <div class="card">
-            <p:dataTable var="product" value="#{dtBasicView.products}">
-                <p:column headerText="Code">
-                    <h:outputText value="#{product.code}" />
-                </p:column>
-
-                <p:column headerText="Name">
-                    <h:outputText value="#{product.name}" />
-                </p:column>
-
-                <p:column headerText="Category">
-                    <h:outputText value="#{product.category}" />
-                </p:column>
-
-                <p:column headerText="Quantity">
-                    <h:outputText value="#{product.quantity}" />
+            <p:dataTable var="specialization_list" value="#{specializationGetAll.execute()}">
+                <p:column headerText="Выберите интересующую вас специализацию">
+                    <h:outputText value="#{specialization_list.name}" />
+                    <div class="button_right">
+                        <br/>
+                        <p:button value="Выбрать" outcome="specializations" styleClass="rounded-button"/>
+                    </div>
                 </p:column>
             </p:dataTable>
         </div>
