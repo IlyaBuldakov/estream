@@ -1,0 +1,15 @@
+html *
+{
+    font-family: "Ubuntu", sans-serif, Tahoma, Geneva, sans-serif !important;
+    margin: 10px;
+}
+
+.container {
+    display: table;
+    margin: 0 auto;
+}
+
+.greeting_text {
+    margin-top: 50px;
+    width:100%
+}
