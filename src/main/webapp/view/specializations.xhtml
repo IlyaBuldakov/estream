@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+<link rel="stylesheet" href="../style.css"/>
+<h:head>
+</h:head>
+
+<div class="card">
+    <h1>EStream</h1>
+    <p:tabMenu activeIndex="#{param.i}">
+        <p:menuitem value="Главная" outcome="index">
+            <f:param name="i" value="0"/>
+        </p:menuitem>
+        <p:menuitem value="Специализации" outcome="specializations">
+            <f:param name="i" value="1"/>
+        </p:menuitem>
+    </p:tabMenu>
+
+    <h:form>
+        <div class="card">
+            <p:dataTable var="product" value="#{dtBasicView.products}">
+                <p:column headerText="Code">
+                    <h:outputText value="#{product.code}" />
+                </p:column>
+
+                <p:column headerText="Name">
+                    <h:outputText value="#{product.name}" />
+                </p:column>
+
+                <p:column headerText="Category">
+                    <h:outputText value="#{product.category}" />
+                </p:column>
+
+                <p:column headerText="Quantity">
+                    <h:outputText value="#{product.quantity}" />
+                </p:column>
+            </p:dataTable>
+        </div>
+    </h:form>
+</div>
+</html>
