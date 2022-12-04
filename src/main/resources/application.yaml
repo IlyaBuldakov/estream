@@ -6,3 +6,6 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql
+  web:
+    resources:
+      static-locations: webapp
