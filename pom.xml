@@ -13,11 +13,7 @@
         <version>2.3.3.RELEASE</version>
     </parent>
 
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
     <dependencies>
-
         <!-- Spring dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
