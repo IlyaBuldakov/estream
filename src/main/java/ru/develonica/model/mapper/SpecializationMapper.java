@@ -30,4 +30,9 @@ public class SpecializationMapper {
     @Column(name = "specialization_name")
     @Getter
     private String name;
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }
