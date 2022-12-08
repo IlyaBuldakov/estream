@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+<link rel="stylesheet" href="style.css"/>
+<h:head>
+</h:head>
+
+<div class="card">
+    <h1>EStream</h1>
+    <p:tabMenu>
+        <p:menuitem value="Специализации" action="specializations"/>
+    </p:tabMenu>
+
+    <h:form rendered="#{specializationController.specializationChosen}">
+        <p:card style="width: 25rem; margin: 5rem auto 0;">
+            <f:facet name="title">
+                #{specializationController.getActiveSpecializationName()}
+            </f:facet>
+
+            <p>Вы выбрали специализацию. Теперь вы находитесь в очереди</p>
+            <f:facet name="footer">
+                <h:commandButton action="#{specializationController.cancelChoose()}" value="Отменить выбор" styleClass="rounded-button ui-button-danger" />
+            </f:facet>
+        </p:card>
+    </h:form>
+
+    <h:form rendered="#{!specializationController.specializationChosen}">
+        <div class="card">
+            <p:dataTable var="specialization" value="#{specializationController.getSpecializationsList()}">
+                <p:column headerText="Выберите интересующую вас специализацию">
+                    <h:commandButton value="#{specialization.name}"
+                                     action="#{specializationController.chooseSpecialization(specialization)}"
+                                     styleClass="rounded-button"/>
+                </p:column>
+            </p:dataTable>
+        </div>
+    </h:form>
+</div>
+</html>
