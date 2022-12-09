@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/estream
+    username: # Username
+    password: # Password
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    database: postgresql
+  web:
+    resources:
+      static-locations: webapp

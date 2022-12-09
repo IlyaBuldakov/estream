@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.Getter;
 
 /**
  * Модель специализации.
@@ -21,18 +20,24 @@ public class SpecializationMapper {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "specialization_id")
-    @Getter
     private Long id;
 
     /**
      * Наименование специализации.
      */
     @Column(name = "specialization_name")
-    @Getter
     private String name;
 
     @Override
     public String toString() {
+        return name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
         return name;
     }
 }

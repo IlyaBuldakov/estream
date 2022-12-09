@@ -2,10 +2,22 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
+    <packaging>pom</packaging>
+
     <groupId>ru.develonica</groupId>
     <artifactId>estream-project</artifactId>
-    <packaging>war</packaging>
     <version>1.0</version>
+
+    <modules>
+        <module>user</module>
+        <module>operator</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -14,6 +26,19 @@
     </parent>
 
     <dependencies>
+
+        <dependency>
+            <groupId>ru.develonica</groupId>
+            <artifactId>user</artifactId>
+            <version>1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.develonica</groupId>
+            <artifactId>operator</artifactId>
+            <version>1.0</version>
+        </dependency>
+
         <!-- Spring dependencies -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -22,12 +47,13 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <artifactId>spring-boot-starter-security</artifactId>
+            <version>2.3.3.RELEASE</version>
         </dependency>
 
         <!-- JSF dependencies -->
@@ -62,13 +88,6 @@
             <artifactId>postgresql</artifactId>
             <version>42.5.1</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.24</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>
@@ -77,13 +96,6 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>2.3.3.RELEASE</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>repackage</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

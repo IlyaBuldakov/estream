@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
-import lombok.Getter;
 import org.springframework.stereotype.Component;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.repository.SpecializationRepository;
@@ -18,10 +17,8 @@ public class SpecializationController implements Serializable {
 
     private final SpecializationRepository specializationRepository;
 
-    @Getter
     private boolean specializationChosen;
 
-    @Getter
     private String activeSpecializationName;
 
     public SpecializationController(List<SpecializationMapper> specializationsList,
@@ -45,5 +42,13 @@ public class SpecializationController implements Serializable {
         this.specializationChosen = false;
         this.activeSpecializationName = null;
         return "specializations.xhtml";
+    }
+
+    public boolean isSpecializationChosen() {
+        return specializationChosen;
+    }
+
+    public String getActiveSpecializationName() {
+        return activeSpecializationName;
     }
 }

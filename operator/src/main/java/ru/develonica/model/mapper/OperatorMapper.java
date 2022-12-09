@@ -7,8 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Модель оператора.
@@ -23,31 +21,24 @@ public class OperatorMapper {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "operator_id")
-    @Getter
     private Long id;
 
     /**
      * E-mail оператора.
      */
     @Column(name = "operator_email")
-    @Getter
-    @Setter
     private String email;
 
     /**
      * Пароль оператора.
      */
     @Column(name = "operator_password")
-    @Getter
-    @Setter
     private String password;
 
     /**
      * Имя оператора.
      */
     @Column(name = "operator_name")
-    @Getter
-    @Setter
     private String name;
 
     /**
@@ -55,8 +46,6 @@ public class OperatorMapper {
      * в данный момент работает оператор.
      */
     @Column(name = "user_uuid")
-    @Getter
-    @Setter
     private UUID userUUID;
 
     /**
@@ -64,7 +53,49 @@ public class OperatorMapper {
      * ли оператор в данный момент.
      */
     @Column(name = "operator_is_active")
-    @Getter
-    @Setter
     private boolean isActive;
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public UUID getUserUUID() {
+        return userUUID;
+    }
+
+    public void setUserUUID(UUID userUUID) {
+        this.userUUID = userUUID;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
+    }
 }
