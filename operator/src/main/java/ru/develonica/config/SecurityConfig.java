@@ -13,10 +13,7 @@ import org.springframework.security.web.authentication.logout.HttpStatusReturnin
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private static final String[] SECURED_PATHS = new String[]{
-            "/panel",
-            "/admin"
-    };
+    private static final String PANEL_PATH = "/panel";
 
     private static final String LOGOUT_URL = "/logout";
 
@@ -27,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests(config -> config
-                        .antMatchers(SECURED_PATHS).authenticated()
+                        .antMatchers(PANEL_PATH).authenticated()
                         .anyRequest().permitAll())
                 .logout(config -> config
                         .logoutUrl(LOGOUT_URL).permitAll()
@@ -35,6 +32,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin()
                 .loginPage(LOGIN_URL)
                 .loginProcessingUrl(LOGIN_URL)
+                .defaultSuccessUrl(PANEL_PATH)
+                .and()
+                .formLogin()
                 .and()
                 .httpBasic();
     }
