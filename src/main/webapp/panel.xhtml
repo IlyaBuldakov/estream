@@ -15,11 +15,19 @@
     </p:tabMenu>
 
     <div class="card">
-        <p:panel header="Начало рабочего процесса" >
+        <p:panel header="Начало рабочего процесса">
             <p class="m-0">
                 Чтобы начать рабочий процесс нажмите кнопку ниже <br/><br/>
-                <h:commandButton value="Начать работу" styleClass="rounded-button" />
+                <h:commandButton value="Начать работу" styleClass="rounded-button"/>
             </p>
+        </p:panel>
+
+        <p:panel header="Панель управления">
+            <form method="post" action="/panel/create-specialization">
+                <label for="specializationName">Добавить специализацию</label><br/><br/>
+                <input type="text" id="specializationName" name="specializationName"/><br/><br/>
+                <button type="submit">Подтвердить</button>
+            </form>
         </p:panel>
     </div>
 </div>
