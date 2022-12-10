@@ -6,30 +6,25 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import org.springframework.stereotype.Component;
 import ru.develonica.model.mapper.SpecializationMapper;
-import ru.develonica.model.repository.SpecializationRepository;
+import ru.develonica.model.service.SpecializationService;
 
 @ManagedBean(name = "specializationUiController")
 @SessionScoped
 @Component
 public class SpecializationUiController implements Serializable {
 
-    private List<SpecializationMapper> specializationsList;
-
-    private final SpecializationRepository specializationRepository;
+    private final SpecializationService specializationService;
 
     private boolean specializationChosen;
 
     private String activeSpecializationName;
 
-    public SpecializationUiController(List<SpecializationMapper> specializationsList,
-                                      SpecializationRepository specializationRepository) {
-        this.specializationsList = specializationsList;
-        this.specializationRepository = specializationRepository;
+    public SpecializationUiController(SpecializationService specializationService) {
+        this.specializationService = specializationService;
     }
 
-    public List<SpecializationMapper> getSpecializationsList() {
-        this.specializationsList = this.specializationRepository.findAll();
-        return this.specializationsList;
+    public List<SpecializationMapper> getSpecializations() {
+        return specializationService.getSpecializations();
     }
 
     public String chooseSpecialization(SpecializationMapper specialization) {
