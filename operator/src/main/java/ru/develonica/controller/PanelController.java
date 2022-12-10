@@ -27,4 +27,16 @@ public class PanelController {
         specializationService.createSpecialization(specializationName);
         return "redirect:/panel";
     }
+
+    @PostMapping("/delete-specialization")
+    public String deleteSpecialization(@RequestParam String specializationName) {
+        specializationService.deleteSpecialization(specializationName);
+        return "redirect:/panel";
+    }
+
+    @PostMapping("/delete-all-specializations")
+    public String deleteAllSpecializations() {
+        specializationService.deleteAllSpecializations();
+        return "redirect:/panel";
+    }
 }

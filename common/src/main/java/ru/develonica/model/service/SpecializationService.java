@@ -21,4 +21,14 @@ public class SpecializationService {
     public List<SpecializationMapper> getSpecializations() {
         return specializationRepository.findAll();
     }
+
+    public void deleteSpecialization(String specializationName) {
+        SpecializationMapper specializationToDelete = specializationRepository
+                .findByName(specializationName);
+        specializationRepository.delete(specializationToDelete);
+    }
+
+    public void deleteAllSpecializations() {
+        specializationRepository.deleteAll();
+    }
 }

@@ -24,9 +24,23 @@
 
         <p:panel header="Панель управления">
             <form method="post" action="/panel/create-specialization">
-                <label for="specializationName">Добавить специализацию</label><br/><br/>
-                <input type="text" id="specializationName" name="specializationName"/><br/><br/>
+                <label for="specializationCreateName">Добавить специализацию</label><br/><br/>
+                <input type="text" id="specializationCreateName" name="specializationName"/><br/><br/>
                 <button type="submit">Подтвердить</button>
+            </form>
+
+            <br/><br/>
+
+            <form method="post" action="/panel/delete-specialization">
+                <label for="specializationDeleteName">Удалить специализацию</label><br/><br/>
+                <input type="text" id="specializationDeleteName" name="specializationName"/><br/><br/>
+                <button type="submit">Подтвердить</button>
+            </form>
+
+            <br/><br/>
+
+            <form method="post" action="/panel/delete-all-specializations">
+                <button type="submit">Удалить все специализации</button>
             </form>
         </p:panel>
     </div>
