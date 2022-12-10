@@ -29,7 +29,7 @@
 
     <h:form rendered="#{!specializationUiController.specializationChosen}">
         <div class="card">
-            <p:dataTable var="specialization" value="#{specializationUiController.getSpecializationsList()}">
+            <p:dataTable var="specialization" value="#{specializationUiController.getSpecializations()}">
                 <p:column headerText="Выберите интересующую вас специализацию">
                     <h:commandButton value="#{specialization.name}"
                                      action="#{specializationUiController.chooseSpecialization(specialization)}"
