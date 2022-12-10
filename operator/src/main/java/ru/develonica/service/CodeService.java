@@ -22,7 +22,7 @@ public class CodeService {
         this.codeRepository = codeRepository;
     }
 
-    public void generateSequence(String specializationName) throws SQLException {
+    public void generateCode(String specializationName) throws SQLException {
         Connection connection = dataSource.getConnection();
         String query = "call generate_sequence(?)";
         PreparedStatement preparedStatement = connection.prepareStatement(query);
