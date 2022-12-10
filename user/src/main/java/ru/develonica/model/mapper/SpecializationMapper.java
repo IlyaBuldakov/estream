@@ -14,6 +14,12 @@ import javax.persistence.Table;
 @Table(name = "specialization")
 public class SpecializationMapper {
 
+    public SpecializationMapper() {}
+
+    public SpecializationMapper(String name) {
+        this.name = name;
+    }
+
     /**
      * Идентификатор.
      */
