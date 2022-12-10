@@ -6,6 +6,10 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     database: postgresql
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    generate-ddl: false
   web:
     resources:
       static-locations: webapp
