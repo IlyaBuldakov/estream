@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.repository.SpecializationRepository;
 
-@ManagedBean(name = "specializationController")
+@ManagedBean(name = "specializationUiController")
 @SessionScoped
 @Component
-public class SpecializationController implements Serializable {
+public class SpecializationUiController implements Serializable {
 
     private List<SpecializationMapper> specializationsList;
 
@@ -21,8 +21,8 @@ public class SpecializationController implements Serializable {
 
     private String activeSpecializationName;
 
-    public SpecializationController(List<SpecializationMapper> specializationsList,
-                                    SpecializationRepository specializationRepository) {
+    public SpecializationUiController(List<SpecializationMapper> specializationsList,
+                                      SpecializationRepository specializationRepository) {
         this.specializationsList = specializationsList;
         this.specializationRepository = specializationRepository;
     }

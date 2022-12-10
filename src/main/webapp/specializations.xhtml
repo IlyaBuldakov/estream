@@ -14,25 +14,25 @@
         <p:menuitem value="Специализации" action="specializations"/>
     </p:tabMenu>
 
-    <h:form rendered="#{specializationController.specializationChosen}">
+    <h:form rendered="#{specializationUiController.specializationChosen}">
         <p:card style="width: 25rem; margin: 5rem auto 0;">
             <f:facet name="title">
-                #{specializationController.getActiveSpecializationName()}
+                #{specializationUiController.getActiveSpecializationName()}
             </f:facet>
 
             <p>Вы выбрали специализацию. Теперь вы находитесь в очереди</p>
             <f:facet name="footer">
-                <h:commandButton action="#{specializationController.cancelChoose()}" value="Отменить выбор" styleClass="rounded-button ui-button-danger" />
+                <h:commandButton action="#{specializationUiController.cancelChoose()}" value="Отменить выбор" styleClass="rounded-button ui-button-danger" />
             </f:facet>
         </p:card>
     </h:form>
 
-    <h:form rendered="#{!specializationController.specializationChosen}">
+    <h:form rendered="#{!specializationUiController.specializationChosen}">
         <div class="card">
-            <p:dataTable var="specialization" value="#{specializationController.getSpecializationsList()}">
+            <p:dataTable var="specialization" value="#{specializationUiController.getSpecializationsList()}">
                 <p:column headerText="Выберите интересующую вас специализацию">
                     <h:commandButton value="#{specialization.name}"
-                                     action="#{specializationController.chooseSpecialization(specialization)}"
+                                     action="#{specializationUiController.chooseSpecialization(specialization)}"
                                      styleClass="rounded-button"/>
                 </p:column>
             </p:dataTable>
