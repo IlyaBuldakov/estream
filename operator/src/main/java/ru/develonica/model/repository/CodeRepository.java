@@ -1,4 +1,4 @@
-package ru.develonica.repository;
+package ru.develonica.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import ru.develonica.model.mapper.CodeMapper;
