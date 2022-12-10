@@ -8,7 +8,7 @@ create table if not exists operator
     operator_email     varchar(128) not null,
     operator_password  varchar(128) not null,
     operator_name      varchar(64)  not null,
-    user_uuid          uuid         not null,
+    user_uuid          uuid,
     operator_is_active boolean      not null
 );
 
@@ -44,8 +44,9 @@ create table if not exists queue_archive
     date_finish date
 );
 
-create table if not exists code_mapper
+create table if not exists code
 (
+    code_id bigserial primary key unique not null,
     sequence_name varchar(128),
     code_letter   character
 );
@@ -59,23 +60,12 @@ create table if not exists code_mapper
  для каждой специализации. В качестве имени последовательности
  используется имя специализации (specialization_name).
  */
-create or replace procedure generate_sequences()
+create or replace procedure generate_sequence(specialization_name varchar)
     language plpgsql
 as
 $$
-declare
-    l_specializations     varchar[];
-    l_specialization_name varchar;
 begin
-    l_specializations := ARRAY(
-            SELECT specialization_name
-            FROM specialization
-        );
-    raise debug '%', l_specializations;
 
-    foreach l_specialization_name in array l_specializations
-        loop
-            EXECUTE 'CREATE SEQUENCE "' || l_specialization_name || '"';
-        end loop;
+    EXECUTE 'CREATE SEQUENCE "' || specialization_name || '"';
 end
 $$;
