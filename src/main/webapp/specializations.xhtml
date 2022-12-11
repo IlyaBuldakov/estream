@@ -20,7 +20,8 @@
                 #{specializationUiController.getActiveSpecializationName()}
             </f:facet>
 
-            <p>Вы выбрали специализацию. Теперь вы находитесь в очереди</p>
+            <p>Вы выбрали специализацию. Теперь вы находитесь в очереди</p><br/>
+            <p>#{specializationUiController.getUserQueueCode()}</p>
             <f:facet name="footer">
                 <h:commandButton action="#{specializationUiController.cancelChoose()}" value="Отменить выбор" styleClass="rounded-button ui-button-danger" />
             </f:facet>
