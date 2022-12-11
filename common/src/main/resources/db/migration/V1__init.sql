@@ -65,6 +65,7 @@ create or replace procedure generate_sequence(specialization_name varchar)
 as
 $$
 begin
+
     EXECUTE 'CREATE SEQUENCE "' || specialization_name || '"';
 end
 $$;
