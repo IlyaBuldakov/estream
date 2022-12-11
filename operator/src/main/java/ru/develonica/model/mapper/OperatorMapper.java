@@ -1,11 +1,16 @@
 package ru.develonica.model.mapper;
 
+import java.util.List;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 /**
@@ -55,6 +60,14 @@ public class OperatorMapper {
     @Column(name = "operator_is_active")
     private boolean isActive;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "operator_specialization",
+            joinColumns = @JoinColumn(name = "operator_id"),
+            inverseJoinColumns = @JoinColumn(name = "specialization_id")
+    )
+    List<SpecializationMapper> specializations;
+
     public Long getId() {
         return id;
     }
@@ -97,5 +110,9 @@ public class OperatorMapper {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public List<SpecializationMapper> getSpecializations() {
+        return specializations;
     }
 }
