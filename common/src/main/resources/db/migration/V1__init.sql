@@ -22,15 +22,15 @@ create table if not exists specialization
 
 create table if not exists operator_specialization
 (
-    operator_id       bigint references operator (operator_id) on update cascade on delete cascade not null,
-    specialization_id bigint references specialization (specialization_id) on update cascade       not null
+    operator_id       bigint references operator (operator_id) on update cascade on delete cascade             not null,
+    specialization_id bigint references specialization (specialization_id) on update cascade on delete cascade not null
 );
 
 create table if not exists queue
 (
     queue_id    uuid primary key not null,
     operator_id bigint references operator (operator_id) on update cascade on delete cascade,
-    date_create timestamp             not null,
+    date_create timestamp        not null,
     date_start  timestamp,
     date_finish timestamp
 );
@@ -39,9 +39,9 @@ create table if not exists queue_archive
 (
     queue_id    uuid primary key                                                                 not null,
     operator_id bigint references operator (operator_id) on update no action on delete no action not null,
-    date_create timestamp                                                                             not null,
-    date_start  timestamp                                                                             not null,
-    date_finish timestamp                                                                             not null
+    date_create timestamp                                                                        not null,
+    date_start  timestamp                                                                        not null,
+    date_finish timestamp                                                                        not null
 );
 
 create table if not exists code
