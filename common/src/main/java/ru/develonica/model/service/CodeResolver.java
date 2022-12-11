@@ -25,7 +25,7 @@ public class CodeResolver {
         Query query = entityManager.createNativeQuery(sql);
         BigInteger result = (BigInteger) query.getSingleResult();
 
-        sb.append(Character.toUpperCase(codeMapper.getCodeLetter()));
+        sb.append(codeMapper.getCodeLetter());
         sb.append(result);
         return sb.toString();
     }
