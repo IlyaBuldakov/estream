@@ -62,18 +62,18 @@
                                  itemValue="#{specialization}"/>
                 </div>
             <div class="card" style="margin: 10px;">
-                <form action="/panel/operator-add-specialization">
+                <form method="post" action="/settings/operator-add-specialization">
                     <label>
                         Добавить себе специализацию<br/><br/>
-                        <input type="text" name="specialization-name"/>
+                        <input type="text" name="specializationName"/>
                     </label><br/><br/>
                     <button type="submit">Подтвердить</button>
                 </form>
                 <br/>
-                <form action="/panel/operator-delete-specialization">
+                <form method="post" action="/settings/operator-delete-specialization">
                     <label>
                         Удалить у себя специализацию<br/><br/>
-                        <input type="text" name="specialization-name"/>
+                        <input type="text" name="specializationName"/>
                     </label><br/><br/>
                     <button type="submit">Подтвердить</button>
                 </form>
