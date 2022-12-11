@@ -5,6 +5,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.develonica.model.mapper.OperatorMapper;
 
+/**
+ * Модель оператора для Spring Security
+ * (реализация UserDetails).
+ */
 public class OperatorSecurity implements UserDetails {
 
     private final String email;

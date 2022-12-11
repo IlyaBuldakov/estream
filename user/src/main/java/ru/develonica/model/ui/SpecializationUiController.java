@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.service.SpecializationService;
 
+/**
+ * UI-контроллер специализаций.
+ * Контроллер представления специализаций.
+ */
 @ManagedBean(name = "specializationUiController")
 @SessionScoped
 @Component
@@ -25,10 +29,21 @@ public class SpecializationUiController implements Serializable {
         this.specializationService = specializationService;
     }
 
+    /**
+     * Получение всех специализаций.
+     *
+     * @return Список специализаций.
+     */
     public List<SpecializationMapper> getSpecializations() {
         return specializationService.getSpecializations();
     }
 
+    /**
+     * Выбор специализации.
+     *
+     * @param specialization Выбранная специализация.
+     * @return Представление со специализациями.
+     */
     public String chooseSpecialization(SpecializationMapper specialization) {
         this.specializationChosen = true;
         this.activeSpecializationName = specialization.toString();
@@ -37,6 +52,11 @@ public class SpecializationUiController implements Serializable {
         return "specializations.xhtml";
     }
 
+    /**
+     * Отменить выбор специализации.
+     *
+     * @return Представление со специализациями.
+     */
     public String cancelChoose() {
         this.specializationChosen = false;
         this.activeSpecializationName = null;

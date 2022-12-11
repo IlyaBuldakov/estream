@@ -6,6 +6,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import ru.develonica.model.repository.OperatorRepository;
 
+/**
+ * Реализация UserDetailsService, которая говорит
+ * Spring Security откуда и каким образом получать оператора
+ * по имени пользователя (в нашем случае по email).
+ */
 @Component
 public class OperatorDetailsService implements UserDetailsService {
 

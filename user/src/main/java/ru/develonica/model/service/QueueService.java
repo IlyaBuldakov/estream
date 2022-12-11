@@ -6,6 +6,9 @@ import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.repository.CodeRepository;
 import ru.develonica.model.repository.QueueRepository;
 
+/**
+ * Сервис для работы с очередями.
+ */
 @Service
 public class QueueService {
 
@@ -22,6 +25,12 @@ public class QueueService {
         this.codeResolver = codeResolver;
     }
 
+    /**
+     * Метод создания элемента очереди (записи в таблице).
+     *
+     * @param specializationName Имя специализации.
+     * @return {@link QueueMapper}.
+     */
     public QueueMapper createQueueEntry(String specializationName) {
         CodeMapper codeMapper = codeRepository.findBySequenceName(specializationName);
         QueueMapper queueMapper = new QueueMapper(codeResolver.resolve(codeMapper));
