@@ -19,6 +19,8 @@ public class SpecializationUiController implements Serializable {
 
     private String activeSpecializationName;
 
+    private String userQueueCode;
+
     public SpecializationUiController(SpecializationService specializationService) {
         this.specializationService = specializationService;
     }
@@ -30,6 +32,8 @@ public class SpecializationUiController implements Serializable {
     public String chooseSpecialization(SpecializationMapper specialization) {
         this.specializationChosen = true;
         this.activeSpecializationName = specialization.toString();
+        this.userQueueCode = this.specializationService
+                .chooseSpecialization(this.activeSpecializationName);
         return "specializations.xhtml";
     }
 
@@ -45,5 +49,9 @@ public class SpecializationUiController implements Serializable {
 
     public String getActiveSpecializationName() {
         return activeSpecializationName;
+    }
+
+    public String getUserQueueCode() {
+        return userQueueCode;
     }
 }
