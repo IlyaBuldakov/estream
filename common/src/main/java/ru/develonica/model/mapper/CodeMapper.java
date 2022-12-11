@@ -37,4 +37,12 @@ public class CodeMapper {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public String getSequenceName() {
+        return sequenceName;
+    }
+
+    public char getCodeLetter() {
+        return codeLetter;
+    }
 }

@@ -1,4 +1,4 @@
-package ru.develonica.service;
+package ru.develonica.model.service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 import org.springframework.stereotype.Service;
 import ru.develonica.model.mapper.CodeMapper;
-import ru.develonica.repository.CodeRepository;
+import ru.develonica.model.repository.CodeRepository;
 
 @Service
 public class CodeService {
