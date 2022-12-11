@@ -10,7 +10,7 @@ import ru.develonica.model.mapper.CodeMapper;
 @Component
 public class CodeResolver {
 
-    private static final String LAST_SEQ_ELEM_QUERY = "SELECT last_value FROM \"%s\"";
+    private static final String LAST_SEQ_ELEM_QUERY = "SELECT nextval('\"%s\"')";
 
     @PersistenceContext
     private final EntityManager entityManager;
