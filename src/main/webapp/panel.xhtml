@@ -43,6 +43,42 @@
                 <button type="submit">Удалить все специализации</button>
             </form>
         </p:panel>
+
+        <p:panel header="Личные настройки">
+                <div class="card" style="display: inline-block;">
+                    <h5>Все специализации:</h5>
+                    <p:orderList value="#{panelUiController.getSpecializations()}"
+                                 var="specialization"
+                                 controlsLocation="none"
+                                 itemLabel="#{specialization}"
+                                 itemValue="#{specialization}"/>
+                </div>
+                <div class="card" style="display: inline-block;">
+                    <h5>Ваши специализации:</h5>
+                    <p:orderList value="#{panelUiController.getCurrentOperatorSpecializations()}"
+                                 var="specialization"
+                                 controlsLocation="none"
+                                 itemLabel="#{specialization}"
+                                 itemValue="#{specialization}"/>
+                </div>
+            <div class="card" style="margin: 10px;">
+                <form action="/panel/operator-add-specialization">
+                    <label>
+                        Добавить себе специализацию<br/><br/>
+                        <input type="text" name="specialization-name"/>
+                    </label><br/><br/>
+                    <button type="submit">Подтвердить</button>
+                </form>
+                <br/>
+                <form action="/panel/operator-delete-specialization">
+                    <label>
+                        Удалить у себя специализацию<br/><br/>
+                        <input type="text" name="specialization-name"/>
+                    </label><br/><br/>
+                    <button type="submit">Подтвердить</button>
+                </form>
+            </div>
+        </p:panel>
     </div>
 </div>
 </html>
