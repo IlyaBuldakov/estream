@@ -28,25 +28,25 @@ create table if not exists operator_specialization
 
 create table if not exists queue
 (
-    queue_id    uuid primary key                                                             not null,
-    operator_id bigint references operator (operator_id) on update cascade on delete cascade not null,
-    date_create date                                                                         not null,
-    date_start  date,
-    date_finish date
+    queue_id    uuid primary key not null,
+    operator_id bigint references operator (operator_id) on update cascade on delete cascade,
+    date_create timestamp             not null,
+    date_start  timestamp,
+    date_finish timestamp
 );
 
 create table if not exists queue_archive
 (
     queue_id    uuid primary key                                                                 not null,
     operator_id bigint references operator (operator_id) on update no action on delete no action not null,
-    date_create date                                                                             not null,
-    date_start  date,
-    date_finish date
+    date_create timestamp                                                                             not null,
+    date_start  timestamp                                                                             not null,
+    date_finish timestamp                                                                             not null
 );
 
 create table if not exists code
 (
-    code_id bigserial primary key unique not null,
+    code_id       bigserial primary key unique not null,
     sequence_name varchar(128),
     code_letter   character
 );
