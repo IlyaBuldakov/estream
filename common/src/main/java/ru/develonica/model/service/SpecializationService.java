@@ -2,6 +2,7 @@ package ru.develonica.model.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.repository.SpecializationRepository;
 
@@ -10,8 +11,12 @@ public class SpecializationService {
 
     private final SpecializationRepository specializationRepository;
 
-    public SpecializationService(SpecializationRepository specializationRepository) {
+    private final QueueService queueService;
+
+    public SpecializationService(SpecializationRepository specializationRepository,
+                                 QueueService queueService) {
         this.specializationRepository = specializationRepository;
+        this.queueService = queueService;
     }
 
     public void createSpecialization(String specializationName) {
@@ -30,5 +35,17 @@ public class SpecializationService {
 
     public void deleteAllSpecializations() {
         specializationRepository.deleteAll();
+    }
+
+    /**
+     * Метод выбора специализации. Создает запись в таблице очереди
+     * и возвращает код пользователя в очереди, исходя из выбранной специализации.
+     *
+     * @param activeSpecializationName Chosen specialization name.
+     * @return Код пользователя в очереди.
+     */
+    public String chooseSpecialization(String activeSpecializationName) {
+        QueueMapper queueEntry = queueService.createQueueEntry(activeSpecializationName);
+        return queueEntry.getUserQueueCode();
     }
 }
