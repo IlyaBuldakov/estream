@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.develonica.model.service.SpecializationService;
-import ru.develonica.service.CodeService;
+import ru.develonica.model.service.CodeService;
 
 @Controller
 @RequestMapping("/panel")
