@@ -17,7 +17,8 @@
     <div class="card">
         <p:panel rendered="#{panelUiController.isThereUserToServe()}">
 
-            <h:outputText value="#{panelUiController.getSpecializationFromRequest()}"/>
+            <p>Поступил запрос от пользователя по специализации: </p><br/>
+            <p><strong><h:outputText value="#{panelUiController.getSpecializationFromRequest()}"/></strong></p><br/>
 
             <form method="get" action="/queue/accept">
                 <button type="submit">Принять</button>
