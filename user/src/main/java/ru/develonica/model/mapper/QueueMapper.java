@@ -34,6 +34,12 @@ public class QueueMapper {
     private Long operatorId;
 
     /**
+     * Код пользователя в очереди.
+     */
+    @Column(name = "user_code")
+    private String userQueueCode;
+
+    /**
      * Дата создания (пользователь встал в очередь).
      */
     @Column(name = "date_create")
@@ -50,12 +56,6 @@ public class QueueMapper {
      */
     @Column(name = "date_finish")
     private Timestamp dateFinish;
-
-    /**
-     * Код пользователя в очереди.
-     */
-    @Transient
-    private String userQueueCode;
 
     public QueueMapper() {}
 

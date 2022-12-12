@@ -30,6 +30,7 @@ create table if not exists queue
 (
     queue_id    uuid primary key not null,
     operator_id bigint references operator (operator_id) on update cascade on delete cascade,
+    user_code   varchar(64),
     date_create timestamp        not null,
     date_start  timestamp,
     date_finish timestamp
@@ -39,6 +40,7 @@ create table if not exists queue_archive
 (
     queue_id    uuid primary key                                                                 not null,
     operator_id bigint references operator (operator_id) on update no action on delete no action not null,
+    user_code   varchar(64)                                                                      not null,
     date_create timestamp                                                                        not null,
     date_start  timestamp                                                                        not null,
     date_finish timestamp                                                                        not null
@@ -65,7 +67,6 @@ create or replace procedure generate_sequence(specialization_name varchar)
 as
 $$
 begin
-
     EXECUTE 'CREATE SEQUENCE "' || specialization_name || '"';
 end
 $$;
