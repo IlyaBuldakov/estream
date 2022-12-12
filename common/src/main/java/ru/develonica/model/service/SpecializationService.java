@@ -59,14 +59,13 @@ public class SpecializationService {
     }
 
     /**
-     * Метод выбора специализации. Создает запись в таблице очереди
-     * и возвращает код пользователя в очереди, исходя из выбранной специализации.
+     * Метод выбора специализации.
+     * Создает запись в таблице очереди и возвращает её.
      *
-     * @param activeSpecializationName Chosen specialization name.
-     * @return Код пользователя в очереди.
+     * @param activeSpecializationName Имя выбранной пользователем специализации.
+     * @return Запись {@link QueueMapper}.
      */
-    public String chooseSpecialization(String activeSpecializationName) {
-        QueueMapper queueEntry = queueService.createQueueEntry(activeSpecializationName);
-        return queueEntry.getUserQueueCode();
+    public QueueMapper chooseSpecialization(String activeSpecializationName) {
+        return queueService.createQueueEntry(activeSpecializationName);
     }
 }

@@ -5,7 +5,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import org.springframework.stereotype.Component;
+import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
+import ru.develonica.model.service.QueueHandler;
 import ru.develonica.model.service.SpecializationService;
 
 /**
@@ -19,14 +21,18 @@ public class SpecializationUiController implements Serializable {
 
     private final SpecializationService specializationService;
 
+    private final QueueHandler queueHandler;
+
     private boolean specializationChosen;
 
-    private String activeSpecializationName;
+    private SpecializationMapper activeSpecialization;
 
     private String userQueueCode;
 
-    public SpecializationUiController(SpecializationService specializationService) {
+    public SpecializationUiController(SpecializationService specializationService,
+                                      QueueHandler queueHandler) {
         this.specializationService = specializationService;
+        this.queueHandler = queueHandler;
     }
 
     /**
@@ -46,9 +52,11 @@ public class SpecializationUiController implements Serializable {
      */
     public String chooseSpecialization(SpecializationMapper specialization) {
         this.specializationChosen = true;
-        this.activeSpecializationName = specialization.toString();
-        this.userQueueCode = this.specializationService
-                .chooseSpecialization(this.activeSpecializationName);
+        this.activeSpecialization = specialization;
+        QueueMapper createdQueueMapper = this.specializationService
+                .chooseSpecialization(this.activeSpecialization.toString());
+        this.userQueueCode = createdQueueMapper.getUserQueueCode();
+        this.queueHandler.setCurrentUserUUID(createdQueueMapper.getId());
         return "specializations.xhtml";
     }
 
@@ -59,18 +67,40 @@ public class SpecializationUiController implements Serializable {
      */
     public String cancelChoose() {
         this.specializationChosen = false;
-        this.activeSpecializationName = null;
+        this.activeSpecialization = null;
         return "specializations.xhtml";
     }
 
+    /**
+     * Метод начала цикла очереди.
+     */
+    public void startQueueLoop() {
+        this.queueHandler.startUserLoop(this.activeSpecialization);
+    }
+
+    /**
+     * Метод - проверка параметра "выбрана ли специализация (пользователем)".
+     *
+     * @return Boolean - выбрана ли специализация (пользователем).
+     */
     public boolean isSpecializationChosen() {
         return specializationChosen;
     }
 
+    /**
+     * Получение имени активной (выбранной) специализации.
+     *
+     * @return Имя выбранной специализации.
+     */
     public String getActiveSpecializationName() {
-        return activeSpecializationName;
+        return activeSpecialization.toString();
     }
 
+    /**
+     * Получение кода пользователя в очереди.
+     *
+     * @return Код пользователя в очереди.
+     */
     public String getUserQueueCode() {
         return userQueueCode;
     }

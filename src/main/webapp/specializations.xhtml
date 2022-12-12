@@ -3,7 +3,8 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
+>
 <link rel="stylesheet" href="style.css"/>
 <h:head>
 </h:head>
@@ -23,9 +24,11 @@
             <p>Вы выбрали специализацию. Теперь вы находитесь в очереди</p><br/>
             <p>#{specializationUiController.getUserQueueCode()}</p>
             <f:facet name="footer">
-                <h:commandButton action="#{specializationUiController.cancelChoose()}" value="Отменить выбор" styleClass="rounded-button ui-button-danger" />
+                <h:commandButton action="#{specializationUiController.cancelChoose()}" value="Отменить выбор"
+                                 styleClass="rounded-button ui-button-danger"/>
             </f:facet>
         </p:card>
+        #{specializationUiController.startQueueLoop()}
     </h:form>
 
     <h:form rendered="#{!specializationUiController.specializationChosen}">

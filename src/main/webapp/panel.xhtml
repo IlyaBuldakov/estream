@@ -15,10 +15,24 @@
     </p:tabMenu>
 
     <div class="card">
+        <p:panel rendered="#{panelUiController.isThereUserToServe()}">
+            <form action="/queue/accept">
+                <button type="submit">Принять</button>
+            </form>
+
+            <form action="/queue/reject">
+                <button type="submit">Отклонить</button>
+            </form>
+        </p:panel>
+    </div>
+
+    <div class="card">
         <p:panel header="Начало рабочего процесса">
             <p class="m-0">
                 Чтобы начать рабочий процесс нажмите кнопку ниже <br/><br/>
-                <h:commandButton value="Начать работу" styleClass="rounded-button"/>
+                <h:form>
+                    <h:commandButton action="#{panelUiController.startQueueLoop()}" value="Начать работу" styleClass="rounded-button"/>
+                </h:form>
             </p>
         </p:panel>
 
@@ -45,22 +59,22 @@
         </p:panel>
 
         <p:panel header="Личные настройки">
-                <div class="card" style="display: inline-block;">
-                    <h5>Все специализации:</h5>
-                    <p:orderList value="#{panelUiController.getSpecializations()}"
-                                 var="specialization"
-                                 controlsLocation="none"
-                                 itemLabel="#{specialization}"
-                                 itemValue="#{specialization}"/>
-                </div>
-                <div class="card" style="display: inline-block;">
-                    <h5>Ваши специализации:</h5>
-                    <p:orderList value="#{panelUiController.getCurrentOperatorSpecializations()}"
-                                 var="specialization"
-                                 controlsLocation="none"
-                                 itemLabel="#{specialization}"
-                                 itemValue="#{specialization}"/>
-                </div>
+            <div class="card" style="display: inline-block;">
+                <h5>Все специализации:</h5>
+                <p:orderList value="#{panelUiController.getSpecializations()}"
+                             var="specialization"
+                             controlsLocation="none"
+                             itemLabel="#{specialization}"
+                             itemValue="#{specialization}"/>
+            </div>
+            <div class="card" style="display: inline-block;">
+                <h5>Ваши специализации:</h5>
+                <p:orderList value="#{panelUiController.getCurrentOperatorSpecializations()}"
+                             var="specialization"
+                             controlsLocation="none"
+                             itemLabel="#{specialization}"
+                             itemValue="#{specialization}"/>
+            </div>
             <div class="card" style="margin: 10px;">
                 <form method="post" action="/settings/operator-add-specialization">
                     <label>

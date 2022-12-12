@@ -6,11 +6,13 @@ import javax.faces.bean.SessionScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import ru.develonica.model.mapper.OperatorMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.repository.OperatorRepository;
+import ru.develonica.model.service.QueueHandler;
 import ru.develonica.model.service.SpecializationService;
 import ru.develonica.security.OperatorSecurity;
 
@@ -26,14 +28,20 @@ public class PanelUiController {
 
     private final SpecializationService specializationService;
 
+    private final QueueHandler queueHandler;
+
     private OperatorMapper currentOperator;
+
+    private boolean isThereUserToServe;
 
     public PanelUiController(EntityManager entityManager,
                              OperatorRepository operatorRepository,
-                             SpecializationService specializationService) {
+                             SpecializationService specializationService,
+                             QueueHandler queueHandler) {
         this.entityManager = entityManager;
         this.operatorRepository = operatorRepository;
         this.specializationService = specializationService;
+        this.queueHandler = queueHandler;
     }
 
     /**
@@ -52,10 +60,18 @@ public class PanelUiController {
         return this.currentOperator.getSpecializations();
     }
 
+    /**
+     * Получение списка всех специализаций.
+     *
+     * @return Список всех специализаций.
+     */
     public List<SpecializationMapper> getSpecializations() {
         return specializationService.getSpecializations();
     }
 
+    /**
+     * Метод загрузки оператора из {@link SecurityContext}.
+     */
     public void loadOperator() {
         String currentOperatorEmail =
                 ((OperatorSecurity) SecurityContextHolder
@@ -64,5 +80,38 @@ public class PanelUiController {
                         .getPrincipal())
                         .getUsername();
         this.currentOperator = operatorRepository.getByEmail(currentOperatorEmail);
+    }
+
+    /**
+     * Метод начала цикла очереди.
+     *
+     * @return Представление с панелью.
+     */
+    public String startQueueLoop() {
+        boolean userWaitingOperator
+                = this.queueHandler.startOperatorLoop(this.currentOperator);
+        if (userWaitingOperator) {
+            thereIsUserToServe();
+            return "panel.xhtml?faces-redirect=true";
+        }
+        return "panel.xhtml";
+    }
+
+    /**
+     * Метод, возвращающий значение - есть ли
+     * пользователь, которого нужно обслужить.
+     *
+     * @return Boolean - есть ли пользователь, которого нужно обслужить.
+     */
+    public boolean isThereUserToServe() {
+        return isThereUserToServe;
+    }
+
+    /**
+     * Метод - переключатель параметра
+     * "есть ли пользователь, которого нужно обслужить."
+     */
+    public void thereIsUserToServe() {
+        this.isThereUserToServe = true;
     }
 }
