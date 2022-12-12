@@ -18,17 +18,17 @@ public class QueuePotentialPairHolder {
     /**
      * Словарь потенциальных пар.
      */
-    private final LinkedHashMap<OperatorMapper, UUID> map = new LinkedHashMap<>();
+    private final LinkedHashMap<UUID, OperatorMapper> map = new LinkedHashMap<>();
 
-    public void putPair(OperatorMapper operator, UUID currentUserUUID) {
-        map.put(operator, currentUserUUID);
+    public void putPair(UUID currentUserUUID, OperatorMapper operator) {
+        map.put(currentUserUUID, operator);
     }
 
     public void removePair(UUID currentUserUUID) {
-        map.values().remove(currentUserUUID);
+        map.remove(currentUserUUID);
     }
 
-    public LinkedHashMap<OperatorMapper, UUID> getMap() {
+    public LinkedHashMap<UUID, OperatorMapper> getMap() {
         return map;
     }
 }

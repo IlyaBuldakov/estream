@@ -91,9 +91,9 @@ public class PanelUiController {
      * @return Представление с панелью.
      */
     public String startQueueLoop() {
-        UUID userToServeUuid
+        boolean userWaitingOperator
                 = this.queueHandler.startOperatorLoop(this.currentOperator);
-        if (userToServeUuid != null) {
+        if (userWaitingOperator) {
             this.specializationFromRequest = this.queueHandler.getCurrentSpecialization();
             thereIsUserToServe();
             return "panel.xhtml?faces-redirect=true";

@@ -38,10 +38,10 @@ public class QueueHandler {
      */
     public void startUserLoop(SpecializationMapper specialization) {
         CompletableFuture.supplyAsync(() -> {
-            boolean operatorFound = false;
+            boolean requestsSend = false;
             List<OperatorMapper> operatorList = operatorRepository
                     .findAllBySpecializationsIn(List.of(specialization));
-            while (!operatorFound) {
+            while (!requestsSend) {
                 try {
                     Thread.sleep(200);
                 } catch (InterruptedException e) {
@@ -53,10 +53,11 @@ public class QueueHandler {
                 List<CompletableFuture<Void>> cfList = new ArrayList<>();
                 for (OperatorMapper operator : operatorList) {
                     cfList.add(CompletableFuture.supplyAsync(() -> {
-                        this.queuePotentialPairHolder.putPair(operator, currentUserUUID);
+                        this.queuePotentialPairHolder.putPair(currentUserUUID, operator);
                         return null;
                     }));
                     CompletableFuture.allOf(cfList.toArray(CompletableFuture[]::new)).join();
+                    requestsSend = true;
                 }
             }
             return null;
@@ -76,13 +77,13 @@ public class QueueHandler {
      * должна быть запись с ключом - оператор, значением - uuid пользователя.
      *
      * @param currentOperator Текущий оператор.
-     * @return UUID пользователя, которого нужно обслужить.
+     * @return Boolean - есть ли пользователь, которого нужно обслужить.
      */
-    public UUID startOperatorLoop(OperatorMapper currentOperator) {
-        LinkedHashMap<OperatorMapper, UUID> pairMap = this.queuePotentialPairHolder.getMap();
+    public boolean startOperatorLoop(OperatorMapper currentOperator) {
+        LinkedHashMap<UUID, OperatorMapper> pairMap = this.queuePotentialPairHolder.getMap();
         while (true) {
-            if (pairMap.containsKey(currentOperator)) {
-                return pairMap.get(currentOperator);
+            if (pairMap.containsValue(currentOperator)) {
+                return true;
             }
         }
     }
