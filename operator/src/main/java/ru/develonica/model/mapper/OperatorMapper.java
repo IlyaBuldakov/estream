@@ -12,13 +12,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import ru.develonica.model.Operator;
 
 /**
  * Модель оператора.
  */
 @Entity
 @Table(name = "operator")
-public class OperatorMapper {
+public class OperatorMapper implements Operator {
 
     /**
      * Идентификатор.
