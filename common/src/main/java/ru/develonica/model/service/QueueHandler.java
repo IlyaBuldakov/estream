@@ -1,6 +1,7 @@
 package ru.develonica.model.service;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -20,6 +21,8 @@ public class QueueHandler {
     private final OperatorRepository operatorRepository;
 
     private UUID currentUserUUID;
+
+    private SpecializationMapper currentSpecialization;
 
     public QueueHandler(QueuePotentialPairHolder queuePotentialPairHolder, OperatorRepository operatorRepository) {
         this.queuePotentialPairHolder = queuePotentialPairHolder;
@@ -72,17 +75,30 @@ public class QueueHandler {
      * должна быть запись с ключом - оператор, значением - uuid пользователя.
      *
      * @param currentOperator Текущий оператор.
-     * @return Boolean - найден ли пользователь, которого нужно обслужить.
+     * @return UUID пользователя, которого нужно обслужить.
      */
-    public boolean startOperatorLoop(OperatorMapper currentOperator) {
+    public UUID startOperatorLoop(OperatorMapper currentOperator) {
+        LinkedHashMap<OperatorMapper, UUID> pairMap = this.queuePotentialPairHolder.getMap();
         while (true) {
-            if (this.queuePotentialPairHolder.getMap().containsKey(currentOperator)) {
-                return true;
+            if (pairMap.containsKey(currentOperator)) {
+                return pairMap.get(currentOperator);
             }
         }
     }
 
     public void setCurrentUserUUID(UUID currentUserUUID) {
         this.currentUserUUID = currentUserUUID;
+    }
+
+    public SpecializationMapper getCurrentSpecialization() {
+        return currentSpecialization;
+    }
+
+    public void setCurrentSpecialization(SpecializationMapper currentSpecialization) {
+        this.currentSpecialization = currentSpecialization;
+    }
+
+    public UUID getCurrentUserUUID() {
+        return currentUserUUID;
     }
 }

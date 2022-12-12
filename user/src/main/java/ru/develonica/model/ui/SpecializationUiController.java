@@ -57,6 +57,7 @@ public class SpecializationUiController implements Serializable {
                 .chooseSpecialization(this.activeSpecialization.toString());
         this.userQueueCode = createdQueueMapper.getUserQueueCode();
         this.queueHandler.setCurrentUserUUID(createdQueueMapper.getId());
+        this.queueHandler.setCurrentSpecialization(this.activeSpecialization);
         return "specializations.xhtml";
     }
 

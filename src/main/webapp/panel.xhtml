@@ -16,12 +16,11 @@
 
     <div class="card">
         <p:panel rendered="#{panelUiController.isThereUserToServe()}">
-            <form action="/queue/accept">
-                <button type="submit">Принять</button>
-            </form>
 
-            <form action="/queue/reject">
-                <button type="submit">Отклонить</button>
+            <h:outputText value="#{panelUiController.getSpecializationFromRequest()}"/>
+
+            <form method="get" action="/queue/accept">
+                <button type="submit">Принять</button>
             </form>
         </p:panel>
     </div>

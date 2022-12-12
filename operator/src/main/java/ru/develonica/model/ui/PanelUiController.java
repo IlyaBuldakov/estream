@@ -1,6 +1,7 @@
 package ru.develonica.model.ui;
 
 import java.util.List;
+import java.util.UUID;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.persistence.EntityManager;
@@ -33,6 +34,8 @@ public class PanelUiController {
     private OperatorMapper currentOperator;
 
     private boolean isThereUserToServe;
+
+    private SpecializationMapper specializationFromRequest;
 
     public PanelUiController(EntityManager entityManager,
                              OperatorRepository operatorRepository,
@@ -88,9 +91,10 @@ public class PanelUiController {
      * @return Представление с панелью.
      */
     public String startQueueLoop() {
-        boolean userWaitingOperator
+        UUID userToServeUuid
                 = this.queueHandler.startOperatorLoop(this.currentOperator);
-        if (userWaitingOperator) {
+        if (userToServeUuid != null) {
+            this.specializationFromRequest = this.queueHandler.getCurrentSpecialization();
             thereIsUserToServe();
             return "panel.xhtml?faces-redirect=true";
         }
@@ -113,5 +117,9 @@ public class PanelUiController {
      */
     public void thereIsUserToServe() {
         this.isThereUserToServe = true;
+    }
+
+    public SpecializationMapper getSpecializationFromRequest() {
+        return specializationFromRequest;
     }
 }

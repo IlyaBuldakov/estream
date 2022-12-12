@@ -1,6 +1,9 @@
 package ru.develonica.model.service;
 
+import java.util.Optional;
+import java.util.UUID;
 import org.springframework.stereotype.Service;
+import ru.develonica.model.Operator;
 import ru.develonica.model.mapper.CodeMapper;
 import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.repository.CodeRepository;
@@ -23,6 +26,15 @@ public class QueueService {
         this.queueRepository = queueRepository;
         this.codeRepository = codeRepository;
         this.codeResolver = codeResolver;
+    }
+
+    public void setOperator(UUID currentUserId, Operator operator) {
+        Optional<QueueMapper> queueMapperOptional = queueRepository.findById(currentUserId);
+        if (queueMapperOptional.isPresent()) {
+            QueueMapper queueMapper = queueMapperOptional.get();
+            queueMapper.setOperatorId(operator.getId());
+            queueRepository.save(queueMapper);
+        }
     }
 
     /**
