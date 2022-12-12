@@ -54,13 +54,6 @@ public class OperatorMapper implements Operator {
     @Column(name = "user_uuid")
     private UUID userUUID;
 
-    /**
-     * Флаг, который определяет активен
-     * ли оператор в данный момент.
-     */
-    @Column(name = "operator_is_active")
-    private boolean isActive;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "operator_specialization",
@@ -95,14 +88,6 @@ public class OperatorMapper implements Operator {
 
     public void setUserUUID(UUID userUUID) {
         this.userUUID = userUUID;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
     }
 
     public List<SpecializationMapper> getSpecializations() {
