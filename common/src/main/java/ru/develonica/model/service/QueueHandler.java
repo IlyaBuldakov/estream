@@ -24,7 +24,8 @@ public class QueueHandler {
 
     private SpecializationMapper currentSpecialization;
 
-    public QueueHandler(QueuePotentialPairHolder queuePotentialPairHolder, OperatorRepository operatorRepository) {
+    public QueueHandler(QueuePotentialPairHolder queuePotentialPairHolder,
+                        OperatorRepository operatorRepository) {
         this.queuePotentialPairHolder = queuePotentialPairHolder;
         this.operatorRepository = operatorRepository;
     }

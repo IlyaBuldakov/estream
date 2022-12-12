@@ -3,13 +3,13 @@ package ru.develonica.model.ui;
 import java.util.List;
 import java.util.UUID;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
 import ru.develonica.model.mapper.OperatorMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.repository.OperatorRepository;
@@ -18,7 +18,7 @@ import ru.develonica.model.service.SpecializationService;
 import ru.develonica.security.OperatorSecurity;
 
 @ManagedBean(name = "panelUiController")
-@SessionScoped
+@SessionScope
 @Component
 public class PanelUiController {
 
@@ -59,7 +59,7 @@ public class PanelUiController {
         Получение свежего списка специализаций, независимо от
         того, каким образом они были добавлены в БД.
          */
-        entityManager.refresh(currentOperator);
+        this.entityManager.refresh(currentOperator);
         return this.currentOperator.getSpecializations();
     }
 

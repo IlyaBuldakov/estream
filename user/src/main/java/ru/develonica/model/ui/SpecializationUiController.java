@@ -3,8 +3,8 @@ package ru.develonica.model.ui;
 import java.io.Serializable;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.annotation.SessionScope;
 import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.service.QueueHandler;
@@ -15,7 +15,7 @@ import ru.develonica.model.service.SpecializationService;
  * Контроллер представления специализаций.
  */
 @ManagedBean(name = "specializationUiController")
-@SessionScoped
+@SessionScope
 @Component
 public class SpecializationUiController implements Serializable {
 
