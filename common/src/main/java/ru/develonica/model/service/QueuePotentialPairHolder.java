@@ -20,8 +20,12 @@ public class QueuePotentialPairHolder {
      */
     private final LinkedHashMap<OperatorMapper, UUID> map = new LinkedHashMap<>();
 
-    public void put(OperatorMapper operator, UUID currentUserUUID) {
+    public void putPair(OperatorMapper operator, UUID currentUserUUID) {
         map.put(operator, currentUserUUID);
+    }
+
+    public void removePair(UUID currentUserUUID) {
+        map.values().remove(currentUserUUID);
     }
 
     public LinkedHashMap<OperatorMapper, UUID> getMap() {

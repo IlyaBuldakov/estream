@@ -24,8 +24,10 @@
             <p>Вы выбрали специализацию. Теперь вы находитесь в очереди</p><br/>
             <p>#{specializationUiController.getUserQueueCode()}</p>
             <f:facet name="footer">
-                <h:commandButton action="#{specializationUiController.cancelChoose()}" value="Отменить выбор"
-                                 styleClass="rounded-button ui-button-danger"/>
+                <h:form>
+                    <h:commandButton action="#{specializationUiController.cancelChoose()}" value="Отменить выбор"
+                                     styleClass="rounded-button ui-button-danger"/>
+                </h:form>
             </f:facet>
         </p:card>
         #{specializationUiController.startQueueLoop()}

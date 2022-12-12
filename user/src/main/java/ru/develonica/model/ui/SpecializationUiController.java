@@ -68,6 +68,7 @@ public class SpecializationUiController implements Serializable {
     public String cancelChoose() {
         this.specializationChosen = false;
         this.activeSpecialization = null;
+        this.queueHandler.userLeaveQueue();
         return "specializations.xhtml";
     }
 

@@ -49,7 +49,7 @@ public class QueueHandler {
                 List<CompletableFuture<Void>> cfList = new ArrayList<>();
                 for (OperatorMapper operator : operatorList) {
                     cfList.add(CompletableFuture.supplyAsync(() -> {
-                        queuePotentialPairHolder.put(operator, currentUserUUID);
+                        this.queuePotentialPairHolder.putPair(operator, currentUserUUID);
                         return null;
                     }));
                     CompletableFuture.allOf(cfList.toArray(CompletableFuture[]::new)).join();
@@ -59,9 +59,24 @@ public class QueueHandler {
         });
     }
 
+    /**
+     * Метод выхода пользователя из очереди.
+     */
+    public void userLeaveQueue() {
+        this.queuePotentialPairHolder.removePair(this.currentUserUUID);
+    }
+
+    /**
+     * Запуск цикла оператора. Ищет в словаре потенциальных пар пользователя,
+     * которого он может обслужить (для этого в словаре потенциальных пар
+     * должна быть запись с ключом - оператор, значением - uuid пользователя.
+     *
+     * @param currentOperator Текущий оператор.
+     * @return Boolean - найден ли пользователь, которого нужно обслужить.
+     */
     public boolean startOperatorLoop(OperatorMapper currentOperator) {
         while (true) {
-            if (queuePotentialPairHolder.getMap().containsKey(currentOperator)) {
+            if (this.queuePotentialPairHolder.getMap().containsKey(currentOperator)) {
                 return true;
             }
         }
