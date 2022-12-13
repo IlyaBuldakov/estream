@@ -21,16 +21,19 @@
                 #{specializationUiController.getActiveSpecializationName()}
             </f:facet>
 
-            <p>Вы выбрали специализацию. Теперь вы находитесь в очереди</p><br/>
+            <p>Вы выбрали специализацию. Ваш талон в очереди: </p><br/>
             <p>#{specializationUiController.getUserQueueCode()}</p>
             <f:facet name="footer">
                 <h:form>
                     <h:commandButton action="#{specializationUiController.cancelChoose()}" value="Отменить выбор"
                                      styleClass="rounded-button ui-button-danger"/>
+                    <br/><br/>
+                    <h:commandButton type="submit" action="#{specializationUiController.startQueueLoop()}"
+                                     value="Начать поиск оператора"
+                                     styleClass="rounded-button ui-button-danger"/>
                 </h:form>
             </f:facet>
         </p:card>
-        #{specializationUiController.startQueueLoop()}
     </h:form>
 
     <h:form rendered="#{!specializationUiController.specializationChosen}">

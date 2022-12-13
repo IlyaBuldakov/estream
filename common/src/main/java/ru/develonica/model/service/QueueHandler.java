@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import org.springframework.stereotype.Service;
 import ru.develonica.model.mapper.OperatorMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
@@ -24,6 +25,8 @@ public class QueueHandler {
 
     private SpecializationMapper currentSpecialization;
 
+    private boolean operatorAcceptedCurrentUser;
+
     public QueueHandler(QueuePotentialPairHolder queuePotentialPairHolder,
                         OperatorRepository operatorRepository) {
         this.queuePotentialPairHolder = queuePotentialPairHolder;
@@ -36,32 +39,24 @@ public class QueueHandler {
      *
      * @param specialization Специализация, по которой обращается пользователь.
      */
-    public void startUserLoop(SpecializationMapper specialization) {
-        CompletableFuture.supplyAsync(() -> {
-            boolean requestsSend = false;
-            List<OperatorMapper> operatorList = operatorRepository
-                    .findAllBySpecializationsIn(List.of(specialization));
-            while (!requestsSend) {
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                if (operatorList.isEmpty()) {
-                    continue;
-                }
-                List<CompletableFuture<Void>> cfList = new ArrayList<>();
-                for (OperatorMapper operator : operatorList) {
-                    cfList.add(CompletableFuture.supplyAsync(() -> {
-                        this.queuePotentialPairHolder.putPair(currentUserUUID, operator);
-                        return null;
-                    }));
-                    CompletableFuture.allOf(cfList.toArray(CompletableFuture[]::new)).join();
-                    requestsSend = true;
-                }
+    public void sendRequests(SpecializationMapper specialization) {
+        List<OperatorMapper> operatorList = operatorRepository
+                .findAllBySpecializationsIn(List.of(specialization));
+        boolean requestsSend = false;
+        while (!requestsSend) {
+            if (operatorList.isEmpty()) {
+                continue;
             }
-            return null;
-        });
+            List<CompletableFuture<Void>> cfList = new ArrayList<>();
+            for (OperatorMapper operator : operatorList) {
+                cfList.add(CompletableFuture.supplyAsync(() -> {
+                    this.queuePotentialPairHolder.putPair(currentUserUUID, operator);
+                    return null;
+                }));
+                CompletableFuture.allOf(cfList.toArray(CompletableFuture[]::new)).join();
+                requestsSend = true;
+            }
+        }
     }
 
     /**
@@ -74,7 +69,7 @@ public class QueueHandler {
     /**
      * Запуск цикла оператора. Ищет в словаре потенциальных пар пользователя,
      * которого он может обслужить (для этого в словаре потенциальных пар
-     * должна быть запись с ключом - оператор, значением - uuid пользователя.
+     * должна быть запись с ключом - оператор, значением - uuid пользователя).
      *
      * @param currentOperator Текущий оператор.
      * @return Boolean - есть ли пользователь, которого нужно обслужить.
@@ -102,5 +97,13 @@ public class QueueHandler {
 
     public UUID getCurrentUserUUID() {
         return currentUserUUID;
+    }
+
+    public boolean isOperatorAcceptedCurrentUser() {
+        return operatorAcceptedCurrentUser;
+    }
+
+    public void setOperatorAcceptedCurrentUser(boolean operatorAcceptedCurrentUser) {
+        this.operatorAcceptedCurrentUser = operatorAcceptedCurrentUser;
     }
 }

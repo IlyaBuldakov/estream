@@ -16,11 +16,13 @@
 
     <div class="card">
         <p:panel rendered="#{panelUiController.isThereUserToServe()}">
-
             <p>Поступил запрос от пользователя по специализации: </p><br/>
-            <p><strong><h:outputText value="#{panelUiController.getSpecializationFromRequest()}"/></strong></p><br/>
-
-            <form method="get" action="/queue/accept">
+            <p><strong>
+                <h:outputText value="#{panelUiController.getSpecializationFromRequest()}"/>
+            </strong></p>
+            <br/>
+            <form method="get" action="/chat/accept">
+                <input type="hidden" name="chatGreeting" value="Чат с пользователем"/>
                 <button type="submit">Принять</button>
             </form>
         </p:panel>
@@ -31,13 +33,15 @@
             <p class="m-0">
                 Управление рабочим процессом <br/><br/>
                 <h:form>
-                    <h:commandButton action="#{panelUiController.startQueueLoop()}" value="Начать работу" styleClass="rounded-button"/>
+                    <h:commandButton action="#{panelUiController.startQueueLoop()}" value="Начать работу"
+                                     styleClass="rounded-button"/>
                 </h:form>
 
                 <br/>
 
                 <h:form>
-                    <h:commandButton action="#{panelUiController.endQueueLoop()}" value="Закончить работу" styleClass="rounded-button"/>
+                    <h:commandButton action="#{panelUiController.endQueueLoop()}" value="Закончить работу"
+                                     styleClass="rounded-button"/>
                 </h:form>
             </p>
         </p:panel>
