@@ -54,6 +54,9 @@ public class OperatorMapper implements Operator {
     @Column(name = "user_uuid")
     private UUID userUUID;
 
+    @Column(name = "operator_is_active")
+    private boolean isActive;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "operator_specialization",
@@ -112,5 +115,13 @@ public class OperatorMapper implements Operator {
         result = 31 * result + email.hashCode();
         result = 31 * result + name.hashCode();
         return result;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

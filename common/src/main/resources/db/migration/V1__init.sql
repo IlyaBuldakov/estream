@@ -8,7 +8,8 @@ create table if not exists operator
     operator_email     varchar(128) not null,
     operator_password  varchar(128) not null,
     operator_name      varchar(64)  not null,
-    user_uuid          uuid
+    user_uuid          uuid,
+    operator_is_active boolean      not null
 );
 
 create table if not exists specialization
