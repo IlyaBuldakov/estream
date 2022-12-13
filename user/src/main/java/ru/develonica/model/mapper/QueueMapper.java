@@ -78,4 +78,8 @@ public class QueueMapper {
     public void setOperatorId(Long operatorId) {
         this.operatorId = operatorId;
     }
+
+    public void setDateStart(Timestamp dateStart) {
+        this.dateStart = dateStart;
+    }
 }

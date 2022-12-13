@@ -1,6 +1,8 @@
 package ru.develonica.model.controller;
 
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.UUID;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,8 +12,8 @@ import ru.develonica.model.service.QueueActionService;
 import ru.develonica.model.service.QueueHandler;
 
 @Controller
-@RequestMapping("/chat")
-public class ChatController {
+@RequestMapping("/serve")
+public class ServeController {
 
     private final ChatService chatService;
 
@@ -19,9 +21,9 @@ public class ChatController {
 
     private final QueueActionService queueActionService;
 
-    public ChatController(ChatService chatService,
-                          QueueHandler queueHandler,
-                          QueueActionService queueActionService) {
+    public ServeController(ChatService chatService,
+                           QueueHandler queueHandler,
+                           QueueActionService queueActionService) {
         this.chatService = chatService;
         this.queueHandler = queueHandler;
         this.queueActionService = queueActionService;
@@ -34,7 +36,9 @@ public class ChatController {
      */
     @GetMapping("/accept")
     public String acceptUser(@RequestParam String chatGreeting) {
-        this.queueActionService.accept(this.queueHandler.getCurrentUserUUID());
+        UUID currentUserUUID = this.queueHandler.getCurrentUserUUID();
+        this.queueActionService.accept(currentUserUUID);
+        this.queueActionService.setDateStart(currentUserUUID, Timestamp.from(Instant.now()));
         this.queueHandler.setOperatorAcceptedCurrentUser(true);
         this.chatService.setChatGreeting(chatGreeting);
         return "redirect:/chat.xhtml";

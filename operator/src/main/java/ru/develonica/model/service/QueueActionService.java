@@ -1,5 +1,6 @@
 package ru.develonica.model.service;
 
+import java.sql.Timestamp;
 import java.util.UUID;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,17 @@ public class QueueActionService {
                 .getContext()
                 .getAuthentication()
                 .getPrincipal();
-        queueService.setOperator(currentUserUuid, operator);
-        operatorService.setUserUuid(operator, currentUserUuid);
+        this.queueService.setOperator(currentUserUuid, operator);
+        this.operatorService.setUserUuid(operator, currentUserUuid);
+    }
+
+    /**
+     * Метод установки даты начала обслуживания.
+     *
+     * @param currentUserUuid UUID пользователя (идентификатор очереди).
+     * @param dateStart Дата начала обслуживания.
+     */
+    public void setDateStart(UUID currentUserUuid, Timestamp dateStart) {
+        this.queueService.setDateStart(currentUserUuid, dateStart);
     }
 }

@@ -87,7 +87,7 @@ public class SpecializationUiController implements Serializable {
 
     private void chatRedirect() {
         try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("chat/enter");
+            FacesContext.getCurrentInstance().getExternalContext().redirect("serve/enter");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

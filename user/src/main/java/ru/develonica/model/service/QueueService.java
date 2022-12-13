@@ -1,5 +1,6 @@
 package ru.develonica.model.service;
 
+import java.sql.Timestamp;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,35 @@ public class QueueService {
         this.codeResolver = codeResolver;
     }
 
+    /**
+     * Метод установки оператора.
+     *
+     * @param currentUserId UUID пользователя (идентификатор очереди).
+     * @param operator Оператор.
+     */
     public void setOperator(UUID currentUserId, Operator operator) {
-        Optional<QueueMapper> queueMapperOptional = queueRepository.findById(currentUserId);
+        Optional<QueueMapper> queueMapperOptional
+                = this.queueRepository.findById(currentUserId);
         if (queueMapperOptional.isPresent()) {
             QueueMapper queueMapper = queueMapperOptional.get();
             queueMapper.setOperatorId(operator.getId());
-            queueRepository.save(queueMapper);
+            this.queueRepository.save(queueMapper);
+        }
+    }
+
+    /**
+     * Метод установки даты начала обслуживания.
+     *
+     * @param currentUserUuid UUID пользователя (идентификатор очереди).
+     * @param dateStart Дата начала обслуживания.
+     */
+    public void setDateStart(UUID currentUserUuid, Timestamp dateStart) {
+        Optional<QueueMapper> queueMapperOptional
+                = this.queueRepository.findById(currentUserUuid);
+        if (queueMapperOptional.isPresent()) {
+            QueueMapper queueMapper = queueMapperOptional.get();
+            queueMapper.setDateStart(dateStart);
+            this.queueRepository.save(queueMapper);
         }
     }
 
@@ -44,9 +68,9 @@ public class QueueService {
      * @return {@link QueueMapper}.
      */
     public QueueMapper createQueueEntry(String specializationName) {
-        CodeMapper codeMapper = codeRepository.findBySequenceName(specializationName);
-        QueueMapper queueMapper = new QueueMapper(codeResolver.resolve(codeMapper));
-        queueRepository.save(queueMapper);
+        CodeMapper codeMapper = this.codeRepository.findBySequenceName(specializationName);
+        QueueMapper queueMapper = new QueueMapper(this.codeResolver.resolve(codeMapper));
+        this.queueRepository.save(queueMapper);
         return queueMapper;
     }
 }
