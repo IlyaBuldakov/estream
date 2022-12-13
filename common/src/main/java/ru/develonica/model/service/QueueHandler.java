@@ -5,11 +5,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import org.springframework.stereotype.Service;
 import ru.develonica.model.mapper.OperatorMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
-import ru.develonica.model.repository.OperatorRepository;
 
 /**
  * Класс отвечающий работу в очереди.
@@ -19,7 +17,7 @@ public class QueueHandler {
 
     private final QueuePotentialPairHolder queuePotentialPairHolder;
 
-    private final OperatorRepository operatorRepository;
+    private final OperatorService operatorService;
 
     private UUID currentUserUUID;
 
@@ -28,9 +26,9 @@ public class QueueHandler {
     private boolean operatorAcceptedCurrentUser;
 
     public QueueHandler(QueuePotentialPairHolder queuePotentialPairHolder,
-                        OperatorRepository operatorRepository) {
+                        OperatorService operatorService) {
         this.queuePotentialPairHolder = queuePotentialPairHolder;
-        this.operatorRepository = operatorRepository;
+        this.operatorService = operatorService;
     }
 
     /**
@@ -40,8 +38,8 @@ public class QueueHandler {
      * @param specialization Специализация, по которой обращается пользователь.
      */
     public void sendRequests(SpecializationMapper specialization) {
-        List<OperatorMapper> operatorList = operatorRepository
-                .findAllBySpecializationsIn(List.of(specialization));
+        List<OperatorMapper> operatorList = this.operatorService
+                .findBySpecializations(List.of(specialization));
         boolean requestsSend = false;
         while (!requestsSend) {
             if (operatorList.isEmpty()) {

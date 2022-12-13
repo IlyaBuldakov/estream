@@ -12,5 +12,4 @@ public interface OperatorRepository extends JpaRepository<OperatorMapper, Long> 
     List<OperatorMapper> findAllBySpecializationsIn(List<SpecializationMapper> specializations);
 
     OperatorMapper getByEmail(String email);
-
 }

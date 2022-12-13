@@ -1,5 +1,6 @@
 package ru.develonica.model.service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,38 @@ public class OperatorService {
 
     public OperatorService(OperatorRepository operatorRepository) {
         this.operatorRepository = operatorRepository;
+    }
+
+    public boolean isActiveById(long id) {
+        Optional<OperatorMapper> operatorMapperOptional
+                = this.operatorRepository.findById(id);
+        if (operatorMapperOptional.isPresent()) {
+            OperatorMapper operator = operatorMapperOptional.get();
+            return operator.isActive();
+        }
+        return false;
+    }
+
+    public List<OperatorMapper> findBySpecializations(List<SpecializationMapper> specializations) {
+        return this.operatorRepository.findAllBySpecializationsIn(specializations);
+    }
+
+    public OperatorMapper getByEmail(String email) {
+        return this.operatorRepository.getByEmail(email);
+    }
+
+    public void setOperatorActive(Operator operator) {
+        Optional<OperatorMapper> operatorMapperOptional
+                = this.operatorRepository.findById(operator.getId());
+        if (operatorMapperOptional.isPresent()) {
+            OperatorMapper operatorMapper = operatorMapperOptional.get();
+            operatorMapper.setActive(true);
+            this.operatorRepository.save(operatorMapper);
+        }
+    }
+
+    public void startLoop() {
+
     }
 
     /**

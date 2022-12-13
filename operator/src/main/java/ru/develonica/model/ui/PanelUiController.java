@@ -1,8 +1,9 @@
 package ru.develonica.model.ui;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 import javax.faces.bean.ManagedBean;
+import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 import ru.develonica.model.mapper.OperatorMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
-import ru.develonica.model.repository.OperatorRepository;
+import ru.develonica.model.service.OperatorService;
 import ru.develonica.model.service.QueueHandler;
 import ru.develonica.model.service.SpecializationService;
 import ru.develonica.security.OperatorSecurity;
@@ -25,9 +26,9 @@ public class PanelUiController {
     @PersistenceContext
     private final EntityManager entityManager;
 
-    private final OperatorRepository operatorRepository;
-
     private final SpecializationService specializationService;
+
+    private final OperatorService operatorService;
 
     private final QueueHandler queueHandler;
 
@@ -38,11 +39,11 @@ public class PanelUiController {
     private SpecializationMapper specializationFromRequest;
 
     public PanelUiController(EntityManager entityManager,
-                             OperatorRepository operatorRepository,
                              SpecializationService specializationService,
+                             OperatorService operatorService,
                              QueueHandler queueHandler) {
         this.entityManager = entityManager;
-        this.operatorRepository = operatorRepository;
+        this.operatorService = operatorService;
         this.specializationService = specializationService;
         this.queueHandler = queueHandler;
     }
@@ -82,23 +83,32 @@ public class PanelUiController {
                         .getAuthentication()
                         .getPrincipal())
                         .getUsername();
-        this.currentOperator = operatorRepository.getByEmail(currentOperatorEmail);
+        this.currentOperator = this.operatorService.getByEmail(currentOperatorEmail);
+    }
+
+    public void setOperatorActive() {
+        this.operatorService.setOperatorActive(this.currentOperator);
+        panelRedirect();
+    }
+
+    public void panelRedirect() {
+        try {
+            FacesContext.getCurrentInstance().getExternalContext().redirect("panel");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
      * Метод начала цикла очереди.
-     *
-     * @return Представление с панелью.
      */
-    public String startQueueLoop() {
+    public void startQueueLoop() {
         boolean userWaitingOperator
                 = this.queueHandler.startOperatorLoop(this.currentOperator);
         if (userWaitingOperator) {
             this.specializationFromRequest = this.queueHandler.getCurrentSpecialization();
             thereIsUserToServe(true);
-            return "panel.xhtml?faces-redirect=true";
         }
-        return "panel.xhtml";
     }
 
     /**

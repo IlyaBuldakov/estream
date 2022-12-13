@@ -33,14 +33,16 @@
             <p class="m-0">
                 Управление рабочим процессом <br/><br/>
                 <h:form>
-                    <h:commandButton action="#{panelUiController.startQueueLoop()}" value="Начать работу"
+                    <h:commandButton action="#{panelUiController.setOperatorActive()}"
+                                     value="Начать работу"
                                      styleClass="rounded-button"/>
                 </h:form>
 
                 <br/>
 
                 <h:form>
-                    <h:commandButton action="#{panelUiController.endQueueLoop()}" value="Закончить работу"
+                    <h:commandButton action="#{panelUiController.endQueueLoop()}"
+                                     value="Закончить работу"
                                      styleClass="rounded-button"/>
                 </h:form>
             </p>
