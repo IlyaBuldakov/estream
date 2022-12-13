@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.develonica.model.service.ChatService;
 import ru.develonica.model.service.QueueActionService;
 import ru.develonica.model.service.QueueHandler;
+import ru.develonica.model.ui.PanelUiController;
 
 @Controller
 @RequestMapping("/serve")
@@ -21,12 +22,16 @@ public class ServeController {
 
     private final QueueActionService queueActionService;
 
+    private final PanelUiController panelUiController;
+
     public ServeController(ChatService chatService,
                            QueueHandler queueHandler,
-                           QueueActionService queueActionService) {
+                           QueueActionService queueActionService,
+                           PanelUiController panelUiController) {
         this.chatService = chatService;
         this.queueHandler = queueHandler;
         this.queueActionService = queueActionService;
+        this.panelUiController = panelUiController;
     }
 
     /**
@@ -40,6 +45,7 @@ public class ServeController {
         this.queueActionService.accept(currentUserUUID);
         this.queueActionService.setDateStart(currentUserUUID, Timestamp.from(Instant.now()));
         this.queueHandler.setOperatorAcceptedCurrentUser(true);
+        this.panelUiController.thereIsUserToServe(false);
         this.chatService.setChatGreeting(chatGreeting);
         return "redirect:/chat.xhtml";
     }

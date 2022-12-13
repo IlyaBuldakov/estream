@@ -64,6 +64,8 @@ public class QueueHandler {
      */
     public void userLeaveQueue() {
         this.queuePotentialPairHolder.removePair(this.currentUserUUID);
+        this.currentSpecialization = null;
+        this.setOperatorAcceptedCurrentUser(false);
     }
 
     /**
