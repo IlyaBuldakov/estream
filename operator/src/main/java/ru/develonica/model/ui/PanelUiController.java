@@ -95,10 +95,20 @@ public class PanelUiController {
                 = this.queueHandler.startOperatorLoop(this.currentOperator);
         if (userWaitingOperator) {
             this.specializationFromRequest = this.queueHandler.getCurrentSpecialization();
-            thereIsUserToServe();
+            thereIsUserToServe(true);
             return "panel.xhtml?faces-redirect=true";
         }
         return "panel.xhtml";
+    }
+
+    /**
+     * Метод завершения цикла работы.
+     *
+     * @return Редирект на представление с панелью.
+     */
+    public String endQueueLoop() {
+        thereIsUserToServe(false);
+        return "panel.xhtml?faces-redirect=true";
     }
 
     /**
@@ -115,8 +125,8 @@ public class PanelUiController {
      * Метод - переключатель параметра
      * "есть ли пользователь, которого нужно обслужить."
      */
-    public void thereIsUserToServe() {
-        this.isThereUserToServe = true;
+    public void thereIsUserToServe(boolean flag) {
+        this.isThereUserToServe = flag;
     }
 
     public SpecializationMapper getSpecializationFromRequest() {

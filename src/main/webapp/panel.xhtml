@@ -27,11 +27,17 @@
     </div>
 
     <div class="card">
-        <p:panel header="Начало рабочего процесса">
+        <p:panel header="Рабочий процесс">
             <p class="m-0">
-                Чтобы начать рабочий процесс нажмите кнопку ниже <br/><br/>
+                Управление рабочим процессом <br/><br/>
                 <h:form>
                     <h:commandButton action="#{panelUiController.startQueueLoop()}" value="Начать работу" styleClass="rounded-button"/>
+                </h:form>
+
+                <br/>
+
+                <h:form>
+                    <h:commandButton action="#{panelUiController.endQueueLoop()}" value="Закончить работу" styleClass="rounded-button"/>
                 </h:form>
             </p>
         </p:panel>
