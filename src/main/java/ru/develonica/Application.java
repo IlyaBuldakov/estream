@@ -8,17 +8,19 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableJpaRepositories
-public class Application{
+@EnableAsync
+public class Application {
 
-    public static void main (String[] args) {
+    public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }
 
     @Bean
-    ServletRegistrationBean jsfServletRegistration (ServletContext servletContext) {
+    ServletRegistrationBean jsfServletRegistration(ServletContext servletContext) {
         servletContext.setInitParameter("com.sun.faces.forceLoadConfiguration", Boolean.TRUE.toString());
         ServletRegistrationBean srb = new ServletRegistrationBean();
         srb.setServlet(new FacesServlet());

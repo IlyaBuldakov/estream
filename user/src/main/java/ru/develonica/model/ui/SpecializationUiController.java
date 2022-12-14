@@ -1,10 +1,7 @@
 package ru.develonica.model.ui;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 import ru.develonica.model.mapper.QueueMapper;
@@ -19,7 +16,7 @@ import ru.develonica.model.service.SpecializationService;
 @ManagedBean(name = "specializationUiController")
 @SessionScope
 @Component
-public class SpecializationUiController implements Serializable {
+public class SpecializationUiController extends AbstractUiController {
 
     private final SpecializationService specializationService;
 
@@ -82,15 +79,7 @@ public class SpecializationUiController implements Serializable {
         while (!this.queueHandler.isOperatorAcceptedCurrentUser()) {
             this.queueHandler.sendRequests(this.activeSpecialization);
         }
-        chatRedirect();
-    }
-
-    private void chatRedirect() {
-        try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("serve/enter");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        super.redirect("serve/enter");
     }
 
     /**

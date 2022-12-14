@@ -1,12 +1,11 @@
 package ru.develonica.model.ui;
 
-import java.io.IOException;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
-import javax.faces.context.FacesContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,7 @@ import ru.develonica.security.OperatorSecurity;
 @ManagedBean(name = "panelUiController")
 @SessionScope
 @Component
-public class PanelUiController {
+public class PanelUiController extends AbstractUiController {
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -88,20 +87,13 @@ public class PanelUiController {
 
     public void setOperatorActive() {
         this.operatorService.setOperatorActive(this.currentOperator);
-        panelRedirect();
-    }
-
-    public void panelRedirect() {
-        try {
-            FacesContext.getCurrentInstance().getExternalContext().redirect("panel");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        super.redirect("panel");
     }
 
     /**
      * Метод начала цикла очереди.
      */
+    @Async
     public void startQueueLoop() {
         boolean userWaitingOperator
                 = this.queueHandler.startOperatorLoop(this.currentOperator);
