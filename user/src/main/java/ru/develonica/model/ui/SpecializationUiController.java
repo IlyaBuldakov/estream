@@ -1,5 +1,7 @@
 package ru.develonica.model.ui;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -70,7 +72,9 @@ public class SpecializationUiController extends AbstractUiController {
         while (true) {
             Optional<Operator> operatorOptional = this.queueService.checkAccept(this.queueEntryData);
             if (operatorOptional.isPresent()) {
-                this.queueService.setOperator(this.queueEntryData.getUserUUID(), operatorOptional);
+                UUID userUUID = this.queueEntryData.getUserUUID();
+                this.queueService.setOperator(userUUID, operatorOptional);
+                this.queueService.setDateStart(userUUID, Timestamp.from(Instant.now()));
                 super.redirect("serve");
                 return;
             }
