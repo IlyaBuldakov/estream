@@ -147,6 +147,10 @@ public class PanelUiController extends AbstractUiController {
         return this.currentOperator.isActive();
     }
 
+    public String getUserQueueCode() {
+        return this.queueEntryData.getUserQueueCode();
+    }
+
     public void setOperator(Operator currentOperator) {
         this.currentOperator = currentOperator;
     }

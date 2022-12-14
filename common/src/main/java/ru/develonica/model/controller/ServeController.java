@@ -10,7 +10,6 @@ public class ServeController {
 
     @GetMapping
     public String getChat() {
-        System.out.println("123");
         return "chat.xhtml";
     }
 }

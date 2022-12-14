@@ -16,7 +16,8 @@
 
     <div class="card">
         <p:panel rendered="#{panelUiController.isThereUserToServe()}">
-            <p>Поступил запрос от пользователя по специализации: </p><br/>
+            <p>Поступил запрос от пользователя <h:outputText value="#{panelUiController.getUserQueueCode()}"/></p><br/>
+            <p>По специализации: </p>
             <p><strong>
                 <h:outputText value="#{panelUiController.getSpecializationFromRequest()}"/>
             </strong></p>
@@ -24,7 +25,7 @@
                 <h:form>
                     <h:commandButton type="submit"
                                      action="#{panelUiController.acceptUser()}"
-                                     value="Принять"/>
+                                     value="Войти в чат с пользователем"/>
                 </h:form>
         </p:panel>
     </div>
