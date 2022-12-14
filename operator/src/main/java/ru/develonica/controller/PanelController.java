@@ -1,8 +1,5 @@
 package ru.develonica.controller;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Future;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,7 +46,6 @@ public class PanelController {
     public String getPanel() {
         Operator currentOperator =
                 (Operator) (SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        currentOperator.getId();
         if (this.operatorService.isActiveById(currentOperator.getId())) {
             this.panelUiController.startQueueLoop();
         }

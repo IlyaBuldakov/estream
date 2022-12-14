@@ -51,10 +51,6 @@ public class OperatorService {
         }
     }
 
-    public void startLoop() {
-
-    }
-
     /**
      * Добавить оператору специализацию.
      *
