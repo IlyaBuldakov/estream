@@ -21,10 +21,11 @@
                 <h:outputText value="#{panelUiController.getSpecializationFromRequest()}"/>
             </strong></p>
             <br/>
-            <form method="get" action="/serve/accept">
-                <input type="hidden" name="chatGreeting" value="Чат с пользователем"/>
-                <button type="submit">Принять</button>
-            </form>
+                <h:form>
+                    <h:commandButton type="submit"
+                                     action="#{panelUiController.acceptUser()}"
+                                     value="Принять"/>
+                </h:form>
         </p:panel>
     </div>
 
@@ -32,9 +33,17 @@
         <p:panel header="Рабочий процесс">
             <p class="m-0">
                 Управление рабочим процессом <br/><br/>
+                <h:form rendered="#{panelUiController.isOperatorActive()}">
+                    <h:commandButton action="#{panelUiController.getRequest()}"
+                                     value="Получить пользователя"
+                                     styleClass="rounded-button"/>
+                </h:form>
+
+                <br/>
+
                 <h:form>
                     <h:commandButton action="#{panelUiController.setOperatorActive()}"
-                                     value="Начать работу"
+                                     value="Начать рабочий день"
                                      styleClass="rounded-button"/>
                 </h:form>
 

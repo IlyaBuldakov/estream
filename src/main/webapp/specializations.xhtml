@@ -3,8 +3,7 @@
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core"
->
+      xmlns:p="http://primefaces.org/ui" xmlns:f="http://java.sun.com/jsf/core">
 <link rel="stylesheet" href="style.css"/>
 <h:head>
 </h:head>
@@ -15,28 +14,20 @@
         <p:menuitem value="Специализации" action="specializations"/>
     </p:tabMenu>
 
-    <h:form rendered="#{specializationUiController.specializationChosen}">
+    <h:form rendered="#{specializationUiController.isSpecializationChosen()}">
         <p:card style="width: 25rem; margin: 5rem auto 0;">
             <f:facet name="title">
                 #{specializationUiController.getActiveSpecializationName()}
             </f:facet>
-
             <p>Вы выбрали специализацию. Ваш талон в очереди: </p><br/>
             <p>#{specializationUiController.getUserQueueCode()}</p>
-            <f:facet name="footer">
-                <h:form>
-                    <h:commandButton action="#{specializationUiController.cancelChoose()}" value="Отменить выбор"
-                                     styleClass="rounded-button ui-button-danger"/>
-                    <br/><br/>
-                    <h:commandButton type="submit" action="#{specializationUiController.startQueueLoop()}"
-                                     value="Начать поиск оператора"
-                                     styleClass="rounded-button ui-button-danger"/>
-                </h:form>
-            </f:facet>
+            <h:commandButton type="submit" action="#{specializationUiController.sendRequests()}"
+                             value="Начать поиск оператора"
+                             styleClass="rounded-button ui-button-danger"/>
         </p:card>
     </h:form>
 
-    <h:form rendered="#{!specializationUiController.specializationChosen}">
+    <h:form rendered="#{!specializationUiController.isSpecializationChosen()}">
         <div class="card">
             <p:dataTable var="specialization" value="#{specializationUiController.getSpecializations()}">
                 <p:column headerText="Выберите интересующую вас специализацию">

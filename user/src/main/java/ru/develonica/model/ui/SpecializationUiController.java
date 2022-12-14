@@ -1,12 +1,16 @@
 package ru.develonica.model.ui;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import javax.faces.bean.ManagedBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
+import ru.develonica.model.Operator;
+import ru.develonica.model.QueueEntryData;
 import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
-import ru.develonica.model.service.QueueHandler;
+import ru.develonica.model.service.QueueService;
 import ru.develonica.model.service.SpecializationService;
 
 /**
@@ -18,94 +22,58 @@ import ru.develonica.model.service.SpecializationService;
 @Component
 public class SpecializationUiController extends AbstractUiController {
 
-    private final SpecializationService specializationService;
+    private final QueueService queueService;
 
-    private final QueueHandler queueHandler;
+    private final SpecializationService specializationService;
 
     private boolean specializationChosen;
 
-    private SpecializationMapper activeSpecialization;
+    private QueueEntryData queueEntryData;
 
-    private String userQueueCode;
-
-    public SpecializationUiController(SpecializationService specializationService,
-                                      QueueHandler queueHandler) {
+    public SpecializationUiController(QueueService queueService,
+                                      SpecializationService specializationService) {
+        this.queueService = queueService;
         this.specializationService = specializationService;
-        this.queueHandler = queueHandler;
     }
 
-    /**
-     * Получение всех специализаций.
-     *
-     * @return Список специализаций.
-     */
-    public List<SpecializationMapper> getSpecializations() {
-        return specializationService.getSpecializations();
-    }
-
-    /**
-     * Выбор специализации.
-     *
-     * @param specialization Выбранная специализация.
-     * @return Представление со специализациями.
-     */
-    public String chooseSpecialization(SpecializationMapper specialization) {
-        this.specializationChosen = true;
-        this.activeSpecialization = specialization;
-        QueueMapper createdQueueMapper = this.specializationService
-                .chooseSpecialization(this.activeSpecialization.toString());
-        this.userQueueCode = createdQueueMapper.getUserQueueCode();
-        this.queueHandler.setCurrentUserUUID(createdQueueMapper.getId());
-        this.queueHandler.setCurrentSpecialization(this.activeSpecialization);
-        return "specializations.xhtml";
-    }
-
-    /**
-     * Отменить выбор специализации.
-     *
-     * @return Представление со специализациями.
-     */
-    public String cancelChoose() {
-        this.specializationChosen = false;
-        this.activeSpecialization = null;
-        this.queueHandler.userLeaveQueue();
-        return "specializations.xhtml";
-    }
-
-    /**
-     * Метод начала цикла очереди.
-     */
-    public void startQueueLoop() {
-        while (!this.queueHandler.isOperatorAcceptedCurrentUser()) {
-            this.queueHandler.sendRequests(this.activeSpecialization);
-        }
-        super.redirect("serve/enter");
-    }
-
-    /**
-     * Метод - проверка параметра "выбрана ли специализация (пользователем)".
-     *
-     * @return Boolean - выбрана ли специализация (пользователем).
-     */
     public boolean isSpecializationChosen() {
         return specializationChosen;
     }
 
-    /**
-     * Получение имени активной (выбранной) специализации.
-     *
-     * @return Имя выбранной специализации.
-     */
-    public String getActiveSpecializationName() {
-        return activeSpecialization.toString();
+    public String chooseSpecialization(SpecializationMapper specialization) {
+        this.specializationChosen = true;
+        this.queueEntryData = new QueueEntryData(specialization, UUID.randomUUID());
+        QueueMapper createdQueueMapper = this.queueService
+                .createQueueEntry(this.queueEntryData);
+        this.queueEntryData.setUserQueueCode(createdQueueMapper.getUserQueueCode());
+        return "specializations.xhtml";
     }
 
-    /**
-     * Получение кода пользователя в очереди.
-     *
-     * @return Код пользователя в очереди.
-     */
+    public List<SpecializationMapper> getSpecializations() {
+        return this.specializationService.getSpecializations();
+    }
+
+    public void sendRequests() {
+        this.queueService.sendRequests(this.queueEntryData);
+        checkAccept();
+    }
+
+    public String getActiveSpecializationName() {
+        return this.queueEntryData.getSpecialization().getName();
+    }
+
     public String getUserQueueCode() {
-        return userQueueCode;
+        return this.queueEntryData.getUserQueueCode();
+    }
+
+    public void checkAccept() {
+        while (true) {
+            Optional<Operator> operatorOptional = this.queueService.checkAccept(this.queueEntryData);
+            if (operatorOptional.isPresent()) {
+                this.queueService.setOperator(this.queueEntryData.getUserUUID(), operatorOptional);
+                super.redirect("serve");
+                return;
+            }
+        }
     }
 }

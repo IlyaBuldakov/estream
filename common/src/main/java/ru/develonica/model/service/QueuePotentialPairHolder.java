@@ -2,9 +2,12 @@ package ru.develonica.model.service;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.UUID;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import org.springframework.stereotype.Component;
-import ru.develonica.model.mapper.OperatorMapper;
+import ru.develonica.model.Operator;
+import ru.develonica.model.QueueEntryData;
 
 /**
  * Класс, хранящий в себе {@link HashMap словарь} с потенциальными
@@ -18,17 +21,40 @@ public class QueuePotentialPairHolder {
     /**
      * Словарь потенциальных пар.
      */
-    private final LinkedHashMap<UUID, OperatorMapper> map = new LinkedHashMap<>();
+    private final LinkedHashMap<QueueEntryData, Operator> map
+            = new LinkedHashMap<>();
 
-    public void putPair(UUID currentUserUUID, OperatorMapper operator) {
-        map.put(currentUserUUID, operator);
+    public void putPair(QueueEntryData queueEntryData, Operator operator) {
+        map.put(queueEntryData, operator);
     }
 
-    public void removePair(UUID currentUserUUID) {
-        map.remove(currentUserUUID);
+    public void acceptPair(QueueEntryData queueEntryData) {
+        Operator operator = map.get(queueEntryData);
+        Set<Map.Entry<QueueEntryData, Operator>> entrySet = map.entrySet();
+        for (Map.Entry<QueueEntryData, Operator> entry : entrySet) {
+            QueueEntryData key = entry.getKey();
+            if (key.equals(queueEntryData)) {
+                key.setPairConnected(true);
+                map.put(key, operator);
+                break;
+            }
+        }
     }
 
-    public LinkedHashMap<UUID, OperatorMapper> getMap() {
+    public Optional<Operator> checkAccept(QueueEntryData queueEntryData) {
+        Set<Map.Entry<QueueEntryData, Operator>> entrySet = map.entrySet();
+        for (Map.Entry<QueueEntryData, Operator> entry : entrySet) {
+            QueueEntryData key = entry.getKey();
+            if (key.equals(queueEntryData)) {
+                if (key.isPairConnected()) {
+                    return Optional.of(entry.getValue());
+                }
+            }
+        }
+        return Optional.empty();
+    }
+
+    public LinkedHashMap<QueueEntryData, Operator> getMap() {
         return map;
     }
 }

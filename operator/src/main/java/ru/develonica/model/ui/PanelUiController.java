@@ -1,19 +1,19 @@
 package ru.develonica.model.ui;
 
 import java.util.List;
+import java.util.Optional;
 import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
-import ru.develonica.model.mapper.OperatorMapper;
+import ru.develonica.model.Operator;
+import ru.develonica.model.QueueEntryData;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.service.OperatorService;
-import ru.develonica.model.service.QueueHandler;
 import ru.develonica.model.service.SpecializationService;
 import ru.develonica.security.OperatorSecurity;
 
@@ -29,9 +29,9 @@ public class PanelUiController extends AbstractUiController {
 
     private final OperatorService operatorService;
 
-    private final QueueHandler queueHandler;
+    private Operator currentOperator;
 
-    private OperatorMapper currentOperator;
+    private QueueEntryData queueEntryData;
 
     private boolean isThereUserToServe;
 
@@ -39,12 +39,10 @@ public class PanelUiController extends AbstractUiController {
 
     public PanelUiController(EntityManager entityManager,
                              SpecializationService specializationService,
-                             OperatorService operatorService,
-                             QueueHandler queueHandler) {
+                             OperatorService operatorService) {
         this.entityManager = entityManager;
         this.operatorService = operatorService;
         this.specializationService = specializationService;
-        this.queueHandler = queueHandler;
     }
 
     /**
@@ -85,22 +83,32 @@ public class PanelUiController extends AbstractUiController {
         this.currentOperator = this.operatorService.getByEmail(currentOperatorEmail);
     }
 
-    public void setOperatorActive() {
+    public String setOperatorActive() {
         this.operatorService.setOperatorActive(this.currentOperator);
-        super.redirect("panel");
+        this.loadOperator();
+        return "panel.xhtml";
     }
 
     /**
      * Метод начала цикла очереди.
      */
-    @Async
-    public void startQueueLoop() {
-        boolean userWaitingOperator
-                = this.queueHandler.startOperatorLoop(this.currentOperator);
-        if (userWaitingOperator) {
-            this.specializationFromRequest = this.queueHandler.getCurrentSpecialization();
+    public void getRequest() {
+        Optional<QueueEntryData> queueEntryDataOptional
+                = this.operatorService.getRequest(this.currentOperator);
+        if (queueEntryDataOptional.isPresent()) {
+            QueueEntryData queueEntryData = queueEntryDataOptional.get();
+            this.specializationFromRequest = queueEntryData.getSpecialization();
             thereIsUserToServe(true);
+            this.queueEntryData = queueEntryData;
         }
+    }
+
+    public void acceptUser() {
+        this.operatorService
+                .acceptPair(this.queueEntryData);
+        this.operatorService
+                .setUserUuid(this.currentOperator, Optional.of(this.queueEntryData.getUserUUID()));
+        super.redirect("serve");
     }
 
     /**
@@ -133,5 +141,13 @@ public class PanelUiController extends AbstractUiController {
 
     public SpecializationMapper getSpecializationFromRequest() {
         return specializationFromRequest;
+    }
+
+    public boolean isOperatorActive() {
+        return this.currentOperator.isActive();
+    }
+
+    public void setOperator(Operator currentOperator) {
+        this.currentOperator = currentOperator;
     }
 }

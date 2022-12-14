@@ -5,10 +5,8 @@ import java.time.Instant;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * Модель очереди.
@@ -22,8 +20,6 @@ public class QueueMapper {
      */
     @Id
     @Column(name = "queue_id", nullable = false)
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     /**
@@ -56,15 +52,12 @@ public class QueueMapper {
     @Column(name = "date_finish")
     private Timestamp dateFinish;
 
-    public QueueMapper() {}
+    public QueueMapper() {
+    }
 
     public QueueMapper(String userQueueCode) {
         this.dateCreate = Timestamp.from(Instant.now());
         this.userQueueCode = userQueueCode;
-    }
-
-    public UUID getId() {
-        return id;
     }
 
     public void setId(UUID id) {
@@ -81,5 +74,13 @@ public class QueueMapper {
 
     public void setDateStart(Timestamp dateStart) {
         this.dateStart = dateStart;
+    }
+
+    public Timestamp getDateFinish() {
+        return dateFinish;
+    }
+
+    public void setDateFinish(Timestamp dateFinish) {
+        this.dateFinish = dateFinish;
     }
 }

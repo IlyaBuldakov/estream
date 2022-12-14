@@ -15,7 +15,10 @@
     </p:tabMenu>
 
     <div class="card">
-        <p:panel header="#{chatUiController.getChatGreeting()}">
+        <p:panel header="Чат">
+            <form method="get" action="/serve/leave">
+                <button type="submit">Завершить общение</button>
+            </form>
         </p:panel>
     </div>
 </div>
