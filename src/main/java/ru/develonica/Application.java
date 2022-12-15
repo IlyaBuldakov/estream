@@ -9,6 +9,9 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+/**
+ * Главный класс приложения.
+ */
 @SpringBootApplication
 @EnableJpaRepositories
 public class Application {

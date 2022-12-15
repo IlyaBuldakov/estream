@@ -3,7 +3,7 @@ package ru.develonica.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.develonica.model.ui.SpecializationUiController;
+import ru.develonica.controller.ui.SpecializationUiController;
 
 /**
  * Welcome page контроллер.
@@ -18,6 +18,11 @@ public class UserGreetingController {
         this.specializationUiController = specializationUiController;
     }
 
+    /**
+     * Получение welcome page (страницы специализаций).
+     *
+     * @return Представление специализаций.
+     */
     @GetMapping
     public String getGreetingPage() {
         this.specializationUiController.resetSessionInfo();

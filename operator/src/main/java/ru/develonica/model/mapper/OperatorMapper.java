@@ -54,9 +54,15 @@ public class OperatorMapper implements Operator {
     @Column(name = "user_uuid")
     private UUID userUUID;
 
+    /**
+     * Переключатель "активен ли оператор".
+     */
     @Column(name = "operator_is_active")
     private boolean isActive;
 
+    /**
+     * Специализации, которые может обслуживать оператор.
+     */
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "operator_specialization",

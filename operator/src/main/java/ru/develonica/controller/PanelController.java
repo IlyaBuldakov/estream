@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.develonica.model.Operator;
 import ru.develonica.model.service.CodeService;
 import ru.develonica.model.service.SpecializationService;
-import ru.develonica.model.ui.PanelUiController;
+import ru.develonica.controller.ui.PanelUiController;
 
 /**
  * Контроллер панели управления.
@@ -58,8 +58,8 @@ public class PanelController {
      */
     @PostMapping("/create-specialization")
     public String createSpecialization(@RequestParam String specializationName) {
-        specializationService.createSpecialization(specializationName);
-        codeService.generateCodeEntry(specializationName);
+        this.specializationService.createSpecialization(specializationName);
+        this.codeService.generateCodeEntry(specializationName);
         return "redirect:/panel";
     }
 
@@ -71,7 +71,7 @@ public class PanelController {
      */
     @PostMapping("/delete-specialization")
     public String deleteSpecialization(@RequestParam String specializationName) {
-        specializationService.deleteSpecialization(specializationName);
+        this.specializationService.deleteSpecialization(specializationName);
         return "redirect:/panel";
     }
 
@@ -82,7 +82,7 @@ public class PanelController {
      */
     @PostMapping("/delete-all-specializations")
     public String deleteAllSpecializations() {
-        specializationService.deleteAllSpecializations();
+        this.specializationService.deleteAllSpecializations();
         return "redirect:/panel";
     }
 }

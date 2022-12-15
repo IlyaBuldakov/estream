@@ -22,6 +22,6 @@ public class OperatorDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return new OperatorSecurity(operatorRepository.getByEmail(email));
+        return new OperatorDetails(operatorRepository.getByEmail(email));
     }
 }

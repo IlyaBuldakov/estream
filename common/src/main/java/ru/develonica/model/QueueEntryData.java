@@ -4,13 +4,17 @@ import java.util.Objects;
 import java.util.UUID;
 import ru.develonica.model.mapper.SpecializationMapper;
 
+/**
+ * Класс, хранящий в себе информацию о текущем пользователе,
+ * его выбранной специализации и коде пользователя в очереди.
+ */
 public class QueueEntryData {
 
-    SpecializationMapper specialization;
+    private final SpecializationMapper specialization;
 
-    UUID userUUID;
+    private final UUID userUUID;
 
-    String userQueueCode;
+    private String userQueueCode;
 
     public QueueEntryData(SpecializationMapper specialization, UUID userUUID) {
         this.specialization = specialization;

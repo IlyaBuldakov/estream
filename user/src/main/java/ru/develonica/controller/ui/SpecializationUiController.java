@@ -1,4 +1,4 @@
-package ru.develonica.model.ui;
+package ru.develonica.controller.ui;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
+import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.service.CodeService;
 import ru.develonica.model.service.QueueService;
 import ru.develonica.model.service.SpecializationService;
 
 /**
- * UI-контроллер специализаций.
- * Контроллер представления специализаций.
+ * UI контроллер для обработки ввода на странице специализаций.
  */
 @ManagedBean(name = "specializationUiController")
 @SessionScope
@@ -30,10 +30,20 @@ public class SpecializationUiController extends AbstractUiController {
 
     private final CodeService codeService;
 
+    /**
+     * Переключатель "выбрана ли специализация".
+     */
     private boolean specializationChosen;
 
+    /**
+     * Переключатель "зарегистрирована ли очередь"
+     * (создана запись в таблице, сгенерирован объект {@link QueueMapper}.
+     */
     private boolean queueRegistered;
 
+    /**
+     * Информация о текущем пользователе и его выборе.
+     */
     private QueueEntryData queueEntryData;
 
     public SpecializationUiController(QueueService queueService,
@@ -44,10 +54,12 @@ public class SpecializationUiController extends AbstractUiController {
         this.codeService = codeService;
     }
 
-    public boolean isSpecializationChosen() {
-        return specializationChosen;
-    }
-
+    /**
+     * Метод выбора специализации.
+     *
+     * @param specialization Выбранная специализация.
+     * @return Представление специализаций.
+     */
     public String chooseSpecialization(SpecializationMapper specialization) {
         this.specializationChosen = true;
         this.queueEntryData = new QueueEntryData(specialization, UUID.randomUUID());
@@ -57,27 +69,22 @@ public class SpecializationUiController extends AbstractUiController {
         return "specializations.xhtml";
     }
 
-    public List<SpecializationMapper> getSpecializations() {
-        return this.specializationService.getSpecializations();
-    }
-
-    public void sendRequests() {
+    /**
+     * Метод входа в очередь и запуска цикла проверки
+     * на факт того, принят ли пользователь оператором.
+     */
+    public void enterQueue() {
         if (!this.queueRegistered) {
             this.queueService.createQueueEntry(this.queueEntryData);
             this.queueRegistered = true;
         }
-        this.queueService.sendRequests(this.queueEntryData);
-        checkAccept();
+        this.queueService.enterQueue(this.queueEntryData);
+        this.checkAccept();
     }
 
-    public String getActiveSpecializationName() {
-        return this.queueEntryData.getSpecialization().getName();
-    }
-
-    public String getUserQueueCode() {
-        return this.queueEntryData.getUserQueueCode();
-    }
-
+    /**
+     * Метод проверки (цикл) на факт того, принят ли пользователь оператором.
+     */
     public void checkAccept() {
         while (true) {
             Optional<Operator> operatorOptional = this.queueService.checkAccept(this.queueEntryData);
@@ -92,11 +99,32 @@ public class SpecializationUiController extends AbstractUiController {
     }
 
     /**
-     * Метод сброса информации о текущей выбранной специализации.
+     * Метод сброса актуальной в рамках сессии информации.
      */
     public void resetSessionInfo() {
         this.specializationChosen = false;
         this.queueEntryData = null;
         this.queueRegistered = false;
+    }
+
+    /**
+     * Метод получения списка специализаций.
+     *
+     * @return Список специализаций.
+     */
+    public List<SpecializationMapper> getSpecializations() {
+        return this.specializationService.getSpecializations();
+    }
+
+    public String getActiveSpecializationName() {
+        return this.queueEntryData.getSpecialization().getName();
+    }
+
+    public String getUserQueueCode() {
+        return this.queueEntryData.getUserQueueCode();
+    }
+
+    public boolean isSpecializationChosen() {
+        return this.specializationChosen;
     }
 }

@@ -2,6 +2,9 @@ package ru.develonica.model;
 
 import ru.develonica.model.mapper.SpecializationMapper;
 
+/**
+ * Класс, хранящий пару "{@link SpecializationMapper}, {@link QueueEntryData}".
+ */
 public class SpecializationQueueEntryDataPair {
 
     private final SpecializationMapper specializationMapper;

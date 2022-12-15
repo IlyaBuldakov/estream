@@ -21,7 +21,7 @@
             </f:facet>
             <p>Вы выбрали специализацию. Ваш талон: </p><br/>
             <p>#{specializationUiController.getUserQueueCode()}</p>
-            <h:commandButton type="submit" action="#{specializationUiController.sendRequests()}"
+            <h:commandButton type="submit" action="#{specializationUiController.enterQueue()}"
                              value="Встать в очередь"
                              styleClass="rounded-button ui-button-danger"/>
         </p:card>

@@ -12,19 +12,34 @@ import ru.develonica.model.mapper.SpecializationMapper;
  * Модель оператора для Spring Security
  * (реализация UserDetails).
  */
-public class OperatorSecurity implements UserDetails, Operator {
+public class OperatorDetails implements UserDetails, Operator {
 
+    /**
+     * Идентификатор.
+     */
     private final Long id;
 
+    /**
+     * Электронная почта.
+     */
     private final String email;
 
+    /**
+     * Пароль.
+     */
     private final String password;
 
+    /**
+     * Список специализаций, которые может обслуживать оператор.
+     */
     private final List<SpecializationMapper> specializations;
 
+    /**
+     * Переключатель "активен ли оператор".
+     */
     private final boolean isActive;
 
-    public OperatorSecurity(OperatorMapper operatorMapper) {
+    public OperatorDetails(OperatorMapper operatorMapper) {
         this.id = operatorMapper.getId();
         this.email = operatorMapper.getEmail();
         this.password = operatorMapper.getPassword();

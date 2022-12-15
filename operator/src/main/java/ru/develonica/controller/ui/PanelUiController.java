@@ -1,4 +1,4 @@
-package ru.develonica.model.ui;
+package ru.develonica.controller.ui;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,8 +16,11 @@ import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.service.OperatorService;
 import ru.develonica.model.service.QueuePotentialPairHolder;
 import ru.develonica.model.service.SpecializationService;
-import ru.develonica.security.OperatorSecurity;
+import ru.develonica.security.OperatorDetails;
 
+/**
+ * UI контроллер для обработки ввода на странице панели.
+ */
 @ManagedBean(name = "panelUiController")
 @SessionScope
 @Component
@@ -30,12 +33,25 @@ public class PanelUiController extends AbstractUiController {
 
     private final OperatorService operatorService;
 
+    /**
+     * Текущий оператор.
+     */
     private Operator currentOperator;
 
+    /**
+     * Класс, хранящий информацию о текущем пользователе и его выборе.
+     */
     private QueueEntryData queueEntryData;
 
+    /**
+     * Переключатель "есть ли в данный момент пользователь,
+     * которого нужно обслужить".
+     */
     private boolean isThereUserToServe;
 
+    /**
+     * Специализация из запроса (запроса пользователя).
+     */
     private SpecializationMapper specializationFromRequest;
 
     public PanelUiController(EntityManager entityManager,
@@ -76,7 +92,7 @@ public class PanelUiController extends AbstractUiController {
      */
     private void loadOperator() {
         String currentOperatorEmail =
-                ((OperatorSecurity) SecurityContextHolder
+                ((OperatorDetails) SecurityContextHolder
                         .getContext()
                         .getAuthentication()
                         .getPrincipal())
@@ -102,9 +118,9 @@ public class PanelUiController extends AbstractUiController {
      * Проверяет, есть ли в словаре {@link QueuePotentialPairHolder} запись от пользователя,
      * соответствующая текущему оператору.
      */
-    public void getRequest() {
+    public void getRequestFromQueue() {
         Optional<QueueEntryData> queueEntryDataOptional
-                = this.operatorService.getRequest(this.currentOperator);
+                = this.operatorService.getRequestFromQueue(this.currentOperator);
         if (queueEntryDataOptional.isPresent()) {
             QueueEntryData queueEntryData = queueEntryDataOptional.get();
             this.specializationFromRequest = queueEntryData.getSpecialization();
@@ -201,6 +217,9 @@ public class PanelUiController extends AbstractUiController {
         this.currentOperator = currentOperator;
     }
 
+    /**
+     * Метод сброса актуальной в рамках сессии информации.
+     */
     public void resetSessionInfo() {
         this.isThereUserToServe = false;
         this.specializationFromRequest = null;

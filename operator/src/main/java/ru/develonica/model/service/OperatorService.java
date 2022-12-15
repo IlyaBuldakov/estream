@@ -12,7 +12,7 @@ import ru.develonica.model.SpecializationQueueEntryDataPair;
 import ru.develonica.model.mapper.OperatorMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.repository.OperatorRepository;
-import ru.develonica.security.OperatorSecurity;
+import ru.develonica.security.OperatorDetails;
 
 /**
  * Сервис для работы с операторами.
@@ -30,7 +30,14 @@ public class OperatorService {
         this.queuePotentialPairHolder = queuePotentialPairHolder;
     }
 
-    public Optional<QueueEntryData> getRequest(Operator currentOperator) {
+    /**
+     * Метод получения запроса от пользователя из очереди.
+     *
+     * @param currentOperator Текущий оператор.
+     * @return Информация о текущем пользователе и его выборе
+     * (если таковой присутствует) в {@link Optional}.
+     */
+    public Optional<QueueEntryData> getRequestFromQueue(Operator currentOperator) {
         Queue<SpecializationQueueEntryDataPair> specMap
                 = this.queuePotentialPairHolder.getQueue();
         List<SpecializationMapper> operatorSpecializations = currentOperator.getSpecializations();
@@ -43,10 +50,12 @@ public class OperatorService {
         return Optional.empty();
     }
 
-    public OperatorMapper getByEmail(String email) {
-        return this.operatorRepository.getByEmail(email);
-    }
-
+    /**
+     * Метод установки переключателя "активен ли оператор".
+     *
+     * @param operator Оператор.
+     * @param value Новое значение "активен ли оператор".
+     */
     public void setOperatorActive(Operator operator, boolean value) {
         Optional<OperatorMapper> operatorMapperOptional
                 = this.operatorRepository.findById(operator.getId());
@@ -85,7 +94,7 @@ public class OperatorService {
      * @return E-mail текущего авторизованного оператора.
      */
     private String getCurrentOperatorEmail() {
-        return ((OperatorSecurity) SecurityContextHolder
+        return ((OperatorDetails) SecurityContextHolder
                 .getContext()
                 .getAuthentication()
                 .getPrincipal())
@@ -111,7 +120,24 @@ public class OperatorService {
         }
     }
 
+    /**
+     * Метод принятия пользователя.
+     *
+     * @param queueEntryData Информация о пользователе и его выборе.
+     * @param currentOperator Текущий оператор.
+     * @return Boolean - удалось ли принять.
+     */
     public boolean acceptPair(QueueEntryData queueEntryData, Operator currentOperator) {
         return this.queuePotentialPairHolder.acceptPair(queueEntryData, currentOperator);
+    }
+
+    /**
+     * Метод получения оператора по email.
+     *
+     * @param email Электронная почта.
+     * @return {@link OperatorMapper Оператор}.
+     */
+    public OperatorMapper getByEmail(String email) {
+        return this.operatorRepository.getByEmail(email);
     }
 }

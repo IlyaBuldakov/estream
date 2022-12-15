@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * Модель очереди.
+ * Модель записи в очереди.
  */
 @Entity
 @Table(name = "queue")

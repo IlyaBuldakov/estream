@@ -26,11 +26,10 @@ public class QueueService {
     }
 
     /**
-     * Отправка запросов подходящим операторам. Ищет всех активных операторов,
-     * которые обладают нужной специализацией и кладет запись со
-     * {@link QueueEntryData своим UUID и специализацией} в словарь {@link QueuePotentialPairHolder}.
+     * Метод входа в очередь (добавление информации о текущем
+     * пользователе и его выборе в очередь).
      */
-    public void sendRequests(QueueEntryData queueEntryData) {
+    public void enterQueue(QueueEntryData queueEntryData) {
         this.queuePotentialPairHolder.putPair(queueEntryData);
     }
 
@@ -73,12 +72,18 @@ public class QueueService {
         }
     }
 
-    public void setDateFinish(UUID currentUserUuid, Timestamp dateStart) {
+    /**
+     * Метод установки даты конца обслуживания.
+     *
+     * @param currentUserUuid UUID пользователя (идентификатор очереди).
+     * @param dateFinish Дата конца обслуживания.
+     */
+    public void setDateFinish(UUID currentUserUuid, Timestamp dateFinish) {
         Optional<QueueMapper> queueMapperOptional
                 = this.queueRepository.findById(currentUserUuid);
         if (queueMapperOptional.isPresent()) {
             QueueMapper queueMapper = queueMapperOptional.get();
-            queueMapper.setDateFinish(dateStart);
+            queueMapper.setDateFinish(dateFinish);
             this.queueRepository.save(queueMapper);
         }
     }
@@ -93,6 +98,12 @@ public class QueueService {
         this.queueRepository.save(queueMapper);
     }
 
+    /**
+     * Метод проверки - принят ли пользователь.
+     *
+     * @param queueEntryData Информация о текущем пользователе и его выборе.
+     * @return Оператор в {@link Optional}.
+     */
     public Optional<Operator> checkAccept(QueueEntryData queueEntryData) {
         return this.queuePotentialPairHolder.checkAccept(queueEntryData);
     }
