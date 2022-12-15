@@ -44,8 +44,9 @@ public class QueueService {
     }
 
     /**
-     * Запуск цикла пользователя. Ищет всех возможных операторов,
-     * которые обладают нужной специализацией и отправляет им запрос на обслуживание.
+     * Отправка запросов подходящим операторам. Ищет всех активных операторов,
+     * которые обладают нужной специализацией и кладет запись со
+     * {@link QueueEntryData своим UUID и специализацией} в словарь {@link QueuePotentialPairHolder}.
      */
     public void sendRequests(QueueEntryData queueEntryData) {
         List<OperatorMapper> operatorList = this.operatorService
@@ -57,10 +58,12 @@ public class QueueService {
             }
             List<CompletableFuture<Void>> cfList = new ArrayList<>();
             for (OperatorMapper operator : operatorList) {
-                cfList.add(CompletableFuture.supplyAsync(() -> {
-                    this.queuePotentialPairHolder.putPair(queueEntryData, operator);
-                    return null;
-                }));
+                if (operator.isActive()) {
+                    cfList.add(CompletableFuture.supplyAsync(() -> {
+                        this.queuePotentialPairHolder.putPair(queueEntryData, operator);
+                        return null;
+                    }));
+                }
                 CompletableFuture.allOf(cfList.toArray(CompletableFuture[]::new)).join();
                 requestsSend = true;
             }

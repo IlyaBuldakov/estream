@@ -14,6 +14,7 @@ import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.service.OperatorService;
+import ru.develonica.model.service.QueuePotentialPairHolder;
 import ru.develonica.model.service.SpecializationService;
 import ru.develonica.security.OperatorSecurity;
 
@@ -52,12 +53,12 @@ public class PanelUiController extends AbstractUiController {
      */
     @Transactional
     public List<SpecializationMapper> getCurrentOperatorSpecializations() {
-        loadOperator();
+        this.loadOperator();
         /*
         Получение свежего списка специализаций, независимо от
         того, каким образом они были добавлены в БД.
          */
-        this.entityManager.refresh(currentOperator);
+        this.entityManager.refresh(this.currentOperator);
         return this.currentOperator.getSpecializations();
     }
 
@@ -67,7 +68,7 @@ public class PanelUiController extends AbstractUiController {
      * @return Список всех специализаций.
      */
     public List<SpecializationMapper> getSpecializations() {
-        return specializationService.getSpecializations();
+        return this.specializationService.getSpecializations();
     }
 
     /**
@@ -83,6 +84,13 @@ public class PanelUiController extends AbstractUiController {
         this.currentOperator = this.operatorService.getByEmail(currentOperatorEmail);
     }
 
+    /**
+     * Устанавливает переключатель "активен ли оператор" для текущего оператора,
+     * освежает оператора (currentOperator) при помощи {@link #loadOperator()}.
+     *
+     * @param value Значение true/false.
+     * @return Представление с панелью.
+     */
     public String setOperatorActive(boolean value) {
         this.operatorService.setOperatorActive(this.currentOperator, value);
         this.loadOperator();
@@ -90,7 +98,9 @@ public class PanelUiController extends AbstractUiController {
     }
 
     /**
-     * Метод начала цикла очереди.
+     * Метод получения запроса от пользователя, которому подходит текущий оператор.
+     * Проверяет, есть ли в словаре {@link QueuePotentialPairHolder} запись от пользователя,
+     * соответствующая текущему оператору.
      */
     public void getRequest() {
         Optional<QueueEntryData> queueEntryDataOptional
@@ -103,6 +113,9 @@ public class PanelUiController extends AbstractUiController {
         }
     }
 
+    /**
+     * Метод принятия пользователя оператором.
+     */
     public void acceptUser() {
         this.operatorService
                 .acceptPair(this.queueEntryData);
@@ -112,7 +125,14 @@ public class PanelUiController extends AbstractUiController {
     }
 
     /**
-     * Метод завершения цикла работы.
+     * Метод завершения работы.
+     * 1. Установка параметра "имеется пользователь, которого нужно обслужить", значение false.
+     * 2. Установка параметра "активен ли оператор", значение false.
+     * 3. Обнуление переменной queueEntryData - локальная запись о пользователе,
+     * которого есть возможность обслужить
+     * 4. Обнуление переменной specializationFromRequest - локальная запись о специализации,
+     * которая получается из запроса пользователя.
+     * 5. Обнуление поля "пользователь", у оператора (которого он обслуживает в данный момент).
      *
      * @return Редирект на представление с панелью.
      */
@@ -132,7 +152,7 @@ public class PanelUiController extends AbstractUiController {
      * @return Boolean - есть ли пользователь, которого нужно обслужить.
      */
     public boolean isThereUserToServe() {
-        return isThereUserToServe;
+        return this.isThereUserToServe;
     }
 
     /**
@@ -144,18 +164,36 @@ public class PanelUiController extends AbstractUiController {
     }
 
     public SpecializationMapper getSpecializationFromRequest() {
-        return specializationFromRequest;
+        return this.specializationFromRequest;
     }
 
+    /**
+     * Проверка - активен ли оператор в данный момент.
+     * Для этого поле currentOperator освежается методом {@link #loadOperator()}
+     *
+     * @return Активен ли оператор.
+     */
     public boolean isOperatorActive() {
-        loadOperator();
+        this.loadOperator();
         return this.currentOperator.isActive();
     }
 
+    /**
+     * Метод получения кода пользователя из поля queueEntryData - записи
+     * о пользователе, которого есть возможность обслужить.
+     *
+     * @return Код пользователя в очереди.
+     */
     public String getUserQueueCode() {
         return this.queueEntryData.getUserQueueCode();
     }
 
+    /**
+     * Установка текущего оператора для использования представлением
+     * (из {@link SecurityContext}).
+     *
+     * @param currentOperator Текущий оператор.
+     */
     public void setOperator(Operator currentOperator) {
         this.currentOperator = currentOperator;
     }
