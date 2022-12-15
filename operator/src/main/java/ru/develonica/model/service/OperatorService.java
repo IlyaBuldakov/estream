@@ -1,15 +1,14 @@
 package ru.develonica.model.service;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import java.util.Queue;
 import java.util.UUID;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
+import ru.develonica.model.SpecializationQueueEntryDataPair;
 import ru.develonica.model.mapper.OperatorMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.repository.OperatorRepository;
@@ -32,19 +31,16 @@ public class OperatorService {
     }
 
     public Optional<QueueEntryData> getRequest(Operator currentOperator) {
-        LinkedHashMap<QueueEntryData, Operator> pairMap
-                = this.queuePotentialPairHolder.getMap();
-        Set<Map.Entry<QueueEntryData, Operator>> entries = pairMap.entrySet();
-        for (Map.Entry<QueueEntryData, Operator> entry : entries) {
-            if (entry.getValue().equals(currentOperator)) {
-                return Optional.of(entry.getKey());
+        Queue<SpecializationQueueEntryDataPair> specMap
+                = this.queuePotentialPairHolder.getQueue();
+        List<SpecializationMapper> operatorSpecializations = currentOperator.getSpecializations();
+        for (int i = 0; i < specMap.size(); i++) {
+            SpecializationQueueEntryDataPair peekedEntry = specMap.peek();
+            if (operatorSpecializations.contains(peekedEntry.getSpecialization())) {
+                return Optional.of(peekedEntry.getQueueEntryData());
             }
         }
         return Optional.empty();
-    }
-
-    public List<OperatorMapper> findBySpecializations(List<SpecializationMapper> specializations) {
-        return this.operatorRepository.findAllBySpecializationsIn(specializations);
     }
 
     public OperatorMapper getByEmail(String email) {
@@ -115,7 +111,7 @@ public class OperatorService {
         }
     }
 
-    public void acceptPair(QueueEntryData queueEntryData) {
-        this.queuePotentialPairHolder.acceptPair(queueEntryData);
+    public boolean acceptPair(QueueEntryData queueEntryData, Operator currentOperator) {
+        return this.queuePotentialPairHolder.acceptPair(queueEntryData, currentOperator);
     }
 }

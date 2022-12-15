@@ -80,4 +80,12 @@ public class SpecializationUiController extends AbstractUiController {
             }
         }
     }
+
+    /**
+     * Метод сброса информации о текущей выбранной специализации.
+     */
+    public void resetSessionInfo() {
+        this.specializationChosen = false;
+        this.queueEntryData = null;
+    }
 }

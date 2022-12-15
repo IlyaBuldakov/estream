@@ -12,8 +12,6 @@ public class QueueEntryData {
 
     String userQueueCode;
 
-    boolean pairConnected;
-
     public QueueEntryData(SpecializationMapper specialization, UUID userUUID) {
         this.specialization = specialization;
         this.userUUID = userUUID;
@@ -25,14 +23,6 @@ public class QueueEntryData {
 
     public UUID getUserUUID() {
         return userUUID;
-    }
-
-    public void setPairConnected(boolean pairConnected) {
-        this.pairConnected = pairConnected;
-    }
-
-    public boolean isPairConnected() {
-        return pairConnected;
     }
 
     public String getUserQueueCode() {

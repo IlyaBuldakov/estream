@@ -2,12 +2,13 @@ package ru.develonica.model.service;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 import org.springframework.stereotype.Component;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
+import ru.develonica.model.SpecializationQueueEntryDataPair;
 
 /**
  * Класс, хранящий в себе {@link HashMap словарь} с потенциальными
@@ -21,44 +22,36 @@ public class QueuePotentialPairHolder {
     /**
      * Словарь потенциальных пар.
      */
-    private final LinkedHashMap<QueueEntryData, Operator> map
+    private final Queue<SpecializationQueueEntryDataPair> queue
+            = new LinkedBlockingQueue<>();
+
+    private final LinkedHashMap<QueueEntryData, Operator> acceptedPairs
             = new LinkedHashMap<>();
 
-    public void putPair(QueueEntryData queueEntryData, Operator operator) {
-        map.put(queueEntryData, operator);
+    public void putPair(QueueEntryData queueEntryData) {
+        queue.add(new SpecializationQueueEntryDataPair(
+                queueEntryData.getSpecialization(),
+                queueEntryData));
     }
 
-    public void acceptPair(QueueEntryData queueEntryData) {
-        Operator operator = map.get(queueEntryData);
-        Set<Map.Entry<QueueEntryData, Operator>> entrySet = map.entrySet();
-        for (Map.Entry<QueueEntryData, Operator> entry : entrySet) {
-            QueueEntryData key = entry.getKey();
-            if (key.equals(queueEntryData)) {
-                key.setPairConnected(true);
-                map.put(key, operator);
-                break;
-            }
+    public boolean acceptPair(QueueEntryData queueEntryData, Operator currentOperator) {
+        if (queue.remove(new SpecializationQueueEntryDataPair(queueEntryData.getSpecialization(), queueEntryData))) {
+            acceptedPairs.put(queueEntryData, currentOperator);
+            return true;
         }
+        return false;
     }
 
     public Optional<Operator> checkAccept(QueueEntryData queueEntryData) {
-        Set<Map.Entry<QueueEntryData, Operator>> entrySet = map.entrySet();
-        for (Map.Entry<QueueEntryData, Operator> entry : entrySet) {
-            QueueEntryData key = entry.getKey();
-            if (key.equals(queueEntryData)) {
-                if (key.isPairConnected()) {
-                    return Optional.of(entry.getValue());
-                }
-            }
+        Operator operator = acceptedPairs.get(queueEntryData);
+        if (operator != null) {
+            acceptedPairs.remove(queueEntryData);
+            return Optional.of(operator);
         }
         return Optional.empty();
     }
 
-    public void removePair(QueueEntryData queueEntryData) {
-        map.remove(queueEntryData);
-    }
-
-    public LinkedHashMap<QueueEntryData, Operator> getMap() {
-        return map;
+    public Queue<SpecializationQueueEntryDataPair> getQueue() {
+        return queue;
     }
 }

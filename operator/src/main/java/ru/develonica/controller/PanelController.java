@@ -42,6 +42,7 @@ public class PanelController {
         Operator currentOperator =
                 (Operator) (SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         this.panelUiController.setOperator(currentOperator);
+        this.panelUiController.resetSessionInfo();
         return "panel.xhtml";
     }
 

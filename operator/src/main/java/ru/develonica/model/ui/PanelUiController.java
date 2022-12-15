@@ -74,7 +74,7 @@ public class PanelUiController extends AbstractUiController {
     /**
      * Метод загрузки оператора из {@link SecurityContext}.
      */
-    public void loadOperator() {
+    private void loadOperator() {
         String currentOperatorEmail =
                 ((OperatorSecurity) SecurityContextHolder
                         .getContext()
@@ -117,11 +117,14 @@ public class PanelUiController extends AbstractUiController {
      * Метод принятия пользователя оператором.
      */
     public void acceptUser() {
-        this.operatorService
-                .acceptPair(this.queueEntryData);
-        this.operatorService
-                .setUserUuid(this.currentOperator, Optional.of(this.queueEntryData.getUserUUID()));
-        super.redirect("serve");
+        if (this.operatorService
+                .acceptPair(this.queueEntryData, this.currentOperator)) {
+            this.operatorService
+                    .setUserUuid(this.currentOperator, Optional.of(this.queueEntryData.getUserUUID()));
+            super.redirect("serve");
+            return;
+        }
+        super.redirect("panel");
     }
 
     /**
@@ -196,5 +199,11 @@ public class PanelUiController extends AbstractUiController {
      */
     public void setOperator(Operator currentOperator) {
         this.currentOperator = currentOperator;
+    }
+
+    public void resetSessionInfo() {
+        this.isThereUserToServe = false;
+        this.specializationFromRequest = null;
+        this.queueEntryData = null;
     }
 }
