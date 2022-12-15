@@ -16,9 +16,11 @@
 
     <div class="card">
         <p:panel header="Чат">
-            <form method="get" action="/serve/leave">
-                <button type="submit">Завершить общение</button>
-            </form>
+            <h:form>
+                <h:commandButton type="submit"
+                                 value="Завершить общение"
+                action="#{serveUiController.test()}"/>
+            </h:form>
         </p:panel>
     </div>
 </div>

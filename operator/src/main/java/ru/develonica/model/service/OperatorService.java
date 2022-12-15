@@ -51,12 +51,12 @@ public class OperatorService {
         return this.operatorRepository.getByEmail(email);
     }
 
-    public void setOperatorActive(Operator operator) {
+    public void setOperatorActive(Operator operator, boolean value) {
         Optional<OperatorMapper> operatorMapperOptional
                 = this.operatorRepository.findById(operator.getId());
         if (operatorMapperOptional.isPresent()) {
             OperatorMapper operatorMapper = operatorMapperOptional.get();
-            operatorMapper.setActive(true);
+            operatorMapper.setActive(value);
             this.operatorRepository.save(operatorMapper);
         }
     }

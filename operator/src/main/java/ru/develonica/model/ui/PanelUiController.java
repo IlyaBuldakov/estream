@@ -83,8 +83,8 @@ public class PanelUiController extends AbstractUiController {
         this.currentOperator = this.operatorService.getByEmail(currentOperatorEmail);
     }
 
-    public String setOperatorActive() {
-        this.operatorService.setOperatorActive(this.currentOperator);
+    public String setOperatorActive(boolean value) {
+        this.operatorService.setOperatorActive(this.currentOperator, value);
         this.loadOperator();
         return "panel.xhtml";
     }
@@ -116,8 +116,12 @@ public class PanelUiController extends AbstractUiController {
      *
      * @return Редирект на представление с панелью.
      */
-    public String endQueueLoop() {
-        thereIsUserToServe(false);
+    public String stopWork() {
+        this.thereIsUserToServe(false);
+        this.setOperatorActive(false);
+        this.queueEntryData = null;
+        this.specializationFromRequest = null;
+        this.operatorService.setUserUuid(this.currentOperator, Optional.empty());
         return "panel.xhtml?faces-redirect=true";
     }
 
@@ -144,6 +148,7 @@ public class PanelUiController extends AbstractUiController {
     }
 
     public boolean isOperatorActive() {
+        loadOperator();
         return this.currentOperator.isActive();
     }
 

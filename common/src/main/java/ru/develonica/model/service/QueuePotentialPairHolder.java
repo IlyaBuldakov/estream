@@ -54,6 +54,10 @@ public class QueuePotentialPairHolder {
         return Optional.empty();
     }
 
+    public void removePair(QueueEntryData queueEntryData) {
+        map.remove(queueEntryData);
+    }
+
     public LinkedHashMap<QueueEntryData, Operator> getMap() {
         return map;
     }

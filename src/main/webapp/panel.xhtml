@@ -42,16 +42,16 @@
 
                 <br/>
 
-                <h:form>
-                    <h:commandButton action="#{panelUiController.setOperatorActive()}"
+                <h:form rendered="#{!panelUiController.isOperatorActive()}">
+                    <h:commandButton action="#{panelUiController.setOperatorActive(true)}"
                                      value="Начать рабочий день"
                                      styleClass="rounded-button"/>
                 </h:form>
 
                 <br/>
 
-                <h:form>
-                    <h:commandButton action="#{panelUiController.endQueueLoop()}"
+                <h:form rendered="#{panelUiController.isOperatorActive()}">
+                    <h:commandButton action="#{panelUiController.stopWork()}"
                                      value="Закончить работу"
                                      styleClass="rounded-button"/>
                 </h:form>

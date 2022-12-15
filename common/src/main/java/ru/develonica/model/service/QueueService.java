@@ -130,6 +130,13 @@ public class QueueService {
     }
 
     public Optional<Operator> checkAccept(QueueEntryData queueEntryData) {
-        return this.queuePotentialPairHolder.checkAccept(queueEntryData);
+        Optional<Operator> operatorOptional = this.queuePotentialPairHolder.checkAccept(queueEntryData);
+        /*
+        Если оператор существует, удаляем запись в словаре потенциальных пар.
+         */
+        if (operatorOptional.isPresent()) {
+            this.queuePotentialPairHolder.removePair(queueEntryData);
+        }
+        return operatorOptional;
     }
 }
