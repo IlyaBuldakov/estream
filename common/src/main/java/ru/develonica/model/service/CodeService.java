@@ -29,9 +29,19 @@ public class CodeService {
 
     private final CodeRepository codeRepository;
 
-    public CodeService(EntityManager entityManager, CodeRepository codeRepository) {
+    private final CodeResolver codeResolver;
+
+    public CodeService(EntityManager entityManager,
+                       CodeRepository codeRepository,
+                       CodeResolver codeResolver) {
         this.entityManager = entityManager;
         this.codeRepository = codeRepository;
+        this.codeResolver = codeResolver;
+    }
+
+    public String createUserQueueCode(String specializationName) {
+        CodeMapper codeMapper = this.codeRepository.findBySequenceName(specializationName);
+        return this.codeResolver.resolve(codeMapper);
     }
 
     /**

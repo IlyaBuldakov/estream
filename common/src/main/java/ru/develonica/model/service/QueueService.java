@@ -6,9 +6,7 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
-import ru.develonica.model.mapper.CodeMapper;
 import ru.develonica.model.mapper.QueueMapper;
-import ru.develonica.model.repository.CodeRepository;
 import ru.develonica.model.repository.QueueRepository;
 
 /**
@@ -19,20 +17,12 @@ public class QueueService {
 
     private final QueueRepository queueRepository;
 
-    private final CodeRepository codeRepository;
-
     private final QueuePotentialPairHolder queuePotentialPairHolder;
 
-    private final CodeResolver codeResolver;
-
     public QueueService(QueueRepository queueRepository,
-                        CodeRepository codeRepository,
-                        QueuePotentialPairHolder queuePotentialPairHolder,
-                        CodeResolver codeResolver) {
+                        QueuePotentialPairHolder queuePotentialPairHolder) {
         this.queueRepository = queueRepository;
-        this.codeRepository = codeRepository;
         this.queuePotentialPairHolder = queuePotentialPairHolder;
-        this.codeResolver = codeResolver;
     }
 
     /**
@@ -42,7 +32,6 @@ public class QueueService {
      */
     public void sendRequests(QueueEntryData queueEntryData) {
         this.queuePotentialPairHolder.putPair(queueEntryData);
-
     }
 
     /**
@@ -96,15 +85,12 @@ public class QueueService {
 
     /**
      * Метод создания элемента очереди (записи в таблице).
-     *
-     * @return {@link QueueMapper}.
      */
-    public QueueMapper createQueueEntry(QueueEntryData queueEntryData) {
-        CodeMapper codeMapper = this.codeRepository.findBySequenceName(queueEntryData.getSpecialization().getName());
-        QueueMapper queueMapper = new QueueMapper(this.codeResolver.resolve(codeMapper));
+    public void createQueueEntry(QueueEntryData queueEntryData) {
+        QueueMapper queueMapper = new QueueMapper();
         queueMapper.setId(queueEntryData.getUserUUID());
+        queueMapper.setUserQueueCode(queueEntryData.getUserQueueCode());
         this.queueRepository.save(queueMapper);
-        return queueMapper;
     }
 
     public Optional<Operator> checkAccept(QueueEntryData queueEntryData) {

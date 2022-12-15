@@ -19,10 +19,10 @@
             <f:facet name="title">
                 #{specializationUiController.getActiveSpecializationName()}
             </f:facet>
-            <p>Вы выбрали специализацию. Ваш талон в очереди: </p><br/>
+            <p>Вы выбрали специализацию. Ваш талон: </p><br/>
             <p>#{specializationUiController.getUserQueueCode()}</p>
             <h:commandButton type="submit" action="#{specializationUiController.sendRequests()}"
-                             value="Начать поиск оператора"
+                             value="Встать в очередь"
                              styleClass="rounded-button ui-button-danger"/>
         </p:card>
     </h:form>

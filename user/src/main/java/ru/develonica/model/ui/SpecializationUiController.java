@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
-import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
+import ru.develonica.model.service.CodeService;
 import ru.develonica.model.service.QueueService;
 import ru.develonica.model.service.SpecializationService;
 
@@ -28,14 +28,20 @@ public class SpecializationUiController extends AbstractUiController {
 
     private final SpecializationService specializationService;
 
+    private final CodeService codeService;
+
     private boolean specializationChosen;
+
+    private boolean queueRegistered;
 
     private QueueEntryData queueEntryData;
 
     public SpecializationUiController(QueueService queueService,
-                                      SpecializationService specializationService) {
+                                      SpecializationService specializationService,
+                                      CodeService codeService) {
         this.queueService = queueService;
         this.specializationService = specializationService;
+        this.codeService = codeService;
     }
 
     public boolean isSpecializationChosen() {
@@ -45,9 +51,9 @@ public class SpecializationUiController extends AbstractUiController {
     public String chooseSpecialization(SpecializationMapper specialization) {
         this.specializationChosen = true;
         this.queueEntryData = new QueueEntryData(specialization, UUID.randomUUID());
-        QueueMapper createdQueueMapper = this.queueService
-                .createQueueEntry(this.queueEntryData);
-        this.queueEntryData.setUserQueueCode(createdQueueMapper.getUserQueueCode());
+        this.queueEntryData.setUserQueueCode(
+                this.codeService.createUserQueueCode(
+                        this.queueEntryData.getSpecialization().getName()));
         return "specializations.xhtml";
     }
 
@@ -56,6 +62,10 @@ public class SpecializationUiController extends AbstractUiController {
     }
 
     public void sendRequests() {
+        if (!this.queueRegistered) {
+            this.queueService.createQueueEntry(this.queueEntryData);
+            this.queueRegistered = true;
+        }
         this.queueService.sendRequests(this.queueEntryData);
         checkAccept();
     }
@@ -87,5 +97,6 @@ public class SpecializationUiController extends AbstractUiController {
     public void resetSessionInfo() {
         this.specializationChosen = false;
         this.queueEntryData = null;
+        this.queueRegistered = false;
     }
 }

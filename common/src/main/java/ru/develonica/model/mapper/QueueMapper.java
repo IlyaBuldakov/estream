@@ -53,19 +53,11 @@ public class QueueMapper {
     private Timestamp dateFinish;
 
     public QueueMapper() {
-    }
-
-    public QueueMapper(String userQueueCode) {
         this.dateCreate = Timestamp.from(Instant.now());
-        this.userQueueCode = userQueueCode;
     }
 
     public void setId(UUID id) {
         this.id = id;
-    }
-
-    public String getUserQueueCode() {
-        return userQueueCode;
     }
 
     public void setOperatorId(Long operatorId) {
@@ -76,11 +68,11 @@ public class QueueMapper {
         this.dateStart = dateStart;
     }
 
-    public Timestamp getDateFinish() {
-        return dateFinish;
-    }
-
     public void setDateFinish(Timestamp dateFinish) {
         this.dateFinish = dateFinish;
+    }
+
+    public void setUserQueueCode(String userQueueCode) {
+        this.userQueueCode = userQueueCode;
     }
 }
