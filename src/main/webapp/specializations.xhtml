@@ -18,12 +18,12 @@
                     window.location.href = "/serve";
                     return 0;
                 } else {
-                    setTimeout(checkAccepted, 1000); // повторить через 1 секунду
+                    setTimeout(checkAccepted, 1000);
                 }
             },
             error: function (xhr, status, error) {
                 console.error(error);
-                setTimeout(checkAccepted, 1000); // повторить через 1 секунду
+                setTimeout(checkAccepted, 1000);
             }
         });
     }
@@ -34,7 +34,6 @@
     <p:tabMenu>
         <p:menuitem value="Специализации" action="specializations"/>
     </p:tabMenu>
-
     <h:form rendered="#{specializationBean.isSpecializationChosen()}">
         <script type="text/javascript">
             checkAccepted();
@@ -52,7 +51,8 @@
         <div class="card">
             <p:dataTable var="specialization" value="#{specializationBean.getSpecializations()}">
                 <p:column headerText="Выберите интересующую вас специализацию">
-                    <h:commandButton value="#{specialization.name}"
+                    <p:commandButton ajax="false"
+                                     value="#{specialization.name}"
                                      action="#{specializationBean.chooseSpecialization(specialization)}"
                                      styleClass="rounded-button"/>
                 </p:column>

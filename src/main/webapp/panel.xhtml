@@ -22,11 +22,12 @@
                 <h:outputText value="#{panelBean.getSpecializationFromRequest()}"/>
             </strong></p>
             <br/>
-                <h:form>
-                    <h:commandButton type="submit"
-                                     action="#{panelBean.acceptUser()}"
-                                     value="Войти в чат с пользователем"/>
-                </h:form>
+            <h:form>
+                <p:commandButton ajax="false"
+                                 type="submit"
+                                 action="#{panelBean.acceptUser()}"
+                                 value="Войти в чат с пользователем"/>
+            </h:form>
         </p:panel>
     </div>
 
@@ -35,48 +36,56 @@
             <p class="m-0">
                 Управление рабочим процессом <br/><br/>
                 <h:form rendered="#{panelBean.isOperatorActive()}">
-                    <h:commandButton action="#{panelBean.getRequestFromQueue()}"
-                                     value="Получить пользователя"
-                                     styleClass="rounded-button"/>
+                    <p:commandButton ajax="false"
+                                     action="#{panelBean.getRequestFromQueue()}"
+                                     value="Получить пользователя"/>
                 </h:form>
 
                 <br/>
 
                 <h:form rendered="#{!panelBean.isOperatorActive()}">
-                    <h:commandButton action="#{panelBean.setOperatorActive(true)}"
+                    <p:commandButton ajax="false"
+                                     action="#{panelBean.setOperatorActive(true)}"
                                      value="Начать рабочий день"
-                                     styleClass="rounded-button"/>
+                                     styleClass="ui-button-success"/>
                 </h:form>
 
                 <br/>
 
                 <h:form rendered="#{panelBean.isOperatorActive()}">
-                    <h:commandButton action="#{panelBean.stopWork()}"
+                    <p:commandButton ajax="false"
+                                     action="#{panelBean.stopWork()}"
                                      value="Закончить работу"
-                                     styleClass="rounded-button"/>
+                                     styleClass="ui-button-danger"/>
                 </h:form>
             </p>
         </p:panel>
 
         <p:panel header="Панель управления">
             <form method="post" action="/panel/create-specialization">
-                <label for="specializationCreateName">Добавить специализацию</label><br/><br/>
-                <input type="text" id="specializationCreateName" name="specializationName"/><br/><br/>
-                <button type="submit">Подтвердить</button>
+                <input type="text" placeholder="Добавить специализацию" id="specializationCreateName"
+                       name="specializationName"/><br/><br/>
+                <p:commandButton ajax="false"
+                                 type="submit"
+                                 value="Подтвердить"/>
             </form>
 
             <br/><br/>
 
             <form method="post" action="/panel/delete-specialization">
-                <label for="specializationDeleteName">Удалить специализацию</label><br/><br/>
-                <input type="text" id="specializationDeleteName" name="specializationName"/><br/><br/>
-                <button type="submit">Подтвердить</button>
+                <input type="text" placeholder="Удалить специализацию" id="specializationDeleteName"
+                       name="specializationName"/><br/><br/>
+                <p:commandButton ajax="false"
+                                 type="submit"
+                                 value="Подтвердить"/>
             </form>
 
             <br/><br/>
 
             <form method="post" action="/panel/delete-all-specializations">
-                <button type="submit">Удалить все специализации</button>
+                <p:commandButton ajax="false"
+                                 type="submit"
+                                 value="Удалить все специализации"/>
             </form>
         </p:panel>
 
@@ -97,21 +106,20 @@
                              itemLabel="#{specialization}"
                              itemValue="#{specialization}"/>
             </div>
+            <br/><br/>
             <div class="card" style="margin: 10px;">
                 <form method="post" action="/settings/operator-add-specialization">
-                    <label>
-                        Добавить себе специализацию<br/><br/>
-                        <input type="text" name="specializationName"/>
-                    </label><br/><br/>
-                    <button type="submit">Подтвердить</button>
+                    <input type="text" placeholder="Добавить себе специализацию" name="specializationName"/>
+                    <br/><br/><p:commandButton ajax="false"
+                                     type="submit"
+                                     value="Подтвердить"/>
                 </form>
                 <br/>
                 <form method="post" action="/settings/operator-delete-specialization">
-                    <label>
-                        Удалить у себя специализацию<br/><br/>
-                        <input type="text" name="specializationName"/>
-                    </label><br/><br/>
-                    <button type="submit">Подтвердить</button>
+                    <input type="text" placeholder="Удалить у себя специализацию" name="specializationName"/>
+                    <br/><br/><p:commandButton ajax="false"
+                                     type="submit"
+                                     value="Подтвердить"/>
                 </form>
             </div>
         </p:panel>

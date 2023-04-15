@@ -65,16 +65,14 @@ public class SpecializationBean extends AbstractUiController {
      * Метод выбора специализации.
      *
      * @param specialization Выбранная специализация.
-     * @return Представление специализаций.
      */
-    public String chooseSpecialization(SpecializationMapper specialization) {
+    public void chooseSpecialization(SpecializationMapper specialization) {
         this.specializationChosen = true;
         this.queueEntryData = new QueueEntryData(specialization, UUID.randomUUID());
         this.queueEntryData.setUserQueueCode(
                 this.codeService.createUserQueueCode(
                         this.queueEntryData.getSpecialization().getName()));
         this.enterQueue();
-        return "specializations.xhtml";
     }
 
     /**
@@ -106,6 +104,7 @@ public class SpecializationBean extends AbstractUiController {
 
     /**
      * Метод, возвращающий в качестве JSON формата ответ на вопрос - принят ли пользователь.
+     *
      * @return JSON. accepted:true/false
      */
     public String getAcceptedAsJson() {

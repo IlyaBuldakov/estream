@@ -2,6 +2,10 @@ html *
 {
     font-family: "Ubuntu", sans-serif, Tahoma, Geneva, sans-serif !important;
 }
+input {
+    all: unset;
+}
+
 
 .container {
     display: table;
