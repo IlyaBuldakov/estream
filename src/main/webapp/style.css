@@ -6,6 +6,10 @@ input {
     all: unset;
 }
 
+a {
+    all: unset;
+    cursor: pointer;
+}
 
 .container {
     display: table;

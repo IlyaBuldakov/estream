@@ -9,7 +9,7 @@
 </h:head>
 
 <div class="card">
-    <h1>EStream</h1>
+    <h1><a href="/">EStream</a></h1>
     <p:tabMenu>
         <p:menuitem value="Специализации" action="specializations"/>
     </p:tabMenu>
@@ -17,9 +17,10 @@
     <div class="card">
         <p:panel header="Чат">
             <h:form>
-                <h:commandButton type="submit"
+                <p:commandButton type="submit"
                                  value="Выйти из чата"
-                                 action="#{serveUiController.stopServing()}"/>
+                                 action="#{serveUiController.stopServing()}"
+                                 styleClass="ui-button-danger"/>
             </h:form>
         </p:panel>
     </div>
