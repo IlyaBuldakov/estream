@@ -25,7 +25,7 @@ public class UserGreetingController {
      */
     @GetMapping
     public String getGreetingPage() {
-        this.specializationBean.resetSessionInfo();
+        this.specializationBean.resetBeanInfo();
         return "specializations.xhtml";
     }
 }

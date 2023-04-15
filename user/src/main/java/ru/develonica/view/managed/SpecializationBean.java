@@ -114,9 +114,9 @@ public class SpecializationBean extends AbstractUiController {
     }
 
     /**
-     * Метод сброса актуальной в рамках сессии информации.
+     * Метод сброса актуальной информации managed bean'а.
      */
-    public void resetSessionInfo() {
+    public void resetBeanInfo() {
         this.specializationChosen = false;
         this.queueEntryData = null;
         this.queueRegistered = false;
