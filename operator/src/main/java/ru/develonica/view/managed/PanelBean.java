@@ -1,4 +1,4 @@
-package ru.develonica.controller.ui;
+package ru.develonica.view.managed;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
+import ru.develonica.controller.ui.AbstractUiController;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
 import ru.develonica.model.mapper.SpecializationMapper;
@@ -22,12 +23,12 @@ import ru.develonica.security.OperatorDetails;
 /**
  * UI контроллер для обработки ввода на странице панели.
  */
-@ManagedBean(name = "panelUiController")
+@ManagedBean(name = "panelBean")
 @SessionScope
 @Component
-public class PanelUiController extends AbstractUiController {
+public class PanelBean extends AbstractUiController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PanelUiController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PanelBean.class);
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -57,9 +58,9 @@ public class PanelUiController extends AbstractUiController {
      */
     private SpecializationMapper specializationFromRequest;
 
-    public PanelUiController(EntityManager entityManager,
-                             SpecializationService specializationService,
-                             OperatorService operatorService) {
+    public PanelBean(EntityManager entityManager,
+                     SpecializationService specializationService,
+                     OperatorService operatorService) {
         this.entityManager = entityManager;
         this.operatorService = operatorService;
         this.specializationService = specializationService;

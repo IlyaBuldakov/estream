@@ -1,4 +1,4 @@
-package ru.develonica.controller.ui;
+package ru.develonica.view.managed;
 
 import java.sql.Timestamp;
 import java.time.Instant;
@@ -8,15 +8,13 @@ import java.util.UUID;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.shaded.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import ru.develonica.controller.ui.AbstractUiController;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
 import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.service.CodeService;
-import ru.develonica.model.service.QueuePairHolder;
 import ru.develonica.model.service.QueueService;
 import ru.develonica.model.service.SpecializationService;
 
@@ -104,6 +102,10 @@ public class SpecializationBean extends AbstractUiController {
         }
     }
 
+    /**
+     * Метод, возвращающий в качестве JSON формата ответ на вопрос - принят ли пользователь.
+     * @return JSON. accepted:true/false
+     */
     public String getAcceptedAsJson() {
         this.checkAccepted();
         JSONObject jsonObject = new JSONObject();

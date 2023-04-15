@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import ru.develonica.model.Operator;
 import ru.develonica.model.service.CodeService;
 import ru.develonica.model.service.SpecializationService;
-import ru.develonica.controller.ui.PanelUiController;
+import ru.develonica.view.managed.PanelBean;
 
 /**
  * Контроллер панели управления.
@@ -20,15 +20,15 @@ public class PanelController {
 
     private final SpecializationService specializationService;
 
-    private final PanelUiController panelUiController;
+    private final PanelBean panelBean;
 
     private final CodeService codeService;
 
     public PanelController(SpecializationService specializationService,
-                           PanelUiController panelUiController,
+                           PanelBean panelBean,
                            CodeService codeService) {
         this.specializationService = specializationService;
-        this.panelUiController = panelUiController;
+        this.panelBean = panelBean;
         this.codeService = codeService;
     }
 
@@ -41,8 +41,8 @@ public class PanelController {
     public String getPanel() {
         Operator currentOperator =
                 (Operator) (SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        this.panelUiController.setOperator(currentOperator);
-        this.panelUiController.resetSessionInfo();
+        this.panelBean.setOperator(currentOperator);
+        this.panelBean.resetSessionInfo();
         return "panel.xhtml";
     }
 

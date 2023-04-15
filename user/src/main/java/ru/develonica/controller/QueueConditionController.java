@@ -2,7 +2,7 @@ package ru.develonica.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.develonica.controller.ui.SpecializationBean;
+import ru.develonica.view.managed.SpecializationBean;
 
 /**
  * Контроллер для получения информации о состоянии очереди.

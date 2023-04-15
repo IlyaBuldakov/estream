@@ -3,7 +3,7 @@ package ru.develonica.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.develonica.controller.ui.SpecializationBean;
+import ru.develonica.view.managed.SpecializationBean;
 
 /**
  * Welcome page контроллер.

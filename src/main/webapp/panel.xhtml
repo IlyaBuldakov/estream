@@ -15,16 +15,16 @@
     </p:tabMenu>
 
     <div class="card">
-        <p:panel rendered="#{panelUiController.isThereUserToServe()}">
-            <p>Поступил запрос от пользователя <h:outputText value="#{panelUiController.getUserQueueCode()}"/></p><br/>
+        <p:panel rendered="#{panelBean.isThereUserToServe()}">
+            <p>Поступил запрос от пользователя <h:outputText value="#{panelBean.getUserQueueCode()}"/></p><br/>
             <p>По специализации: </p>
             <p><strong>
-                <h:outputText value="#{panelUiController.getSpecializationFromRequest()}"/>
+                <h:outputText value="#{panelBean.getSpecializationFromRequest()}"/>
             </strong></p>
             <br/>
                 <h:form>
                     <h:commandButton type="submit"
-                                     action="#{panelUiController.acceptUser()}"
+                                     action="#{panelBean.acceptUser()}"
                                      value="Войти в чат с пользователем"/>
                 </h:form>
         </p:panel>
@@ -34,24 +34,24 @@
         <p:panel header="Рабочий процесс">
             <p class="m-0">
                 Управление рабочим процессом <br/><br/>
-                <h:form rendered="#{panelUiController.isOperatorActive()}">
-                    <h:commandButton action="#{panelUiController.getRequestFromQueue()}"
+                <h:form rendered="#{panelBean.isOperatorActive()}">
+                    <h:commandButton action="#{panelBean.getRequestFromQueue()}"
                                      value="Получить пользователя"
                                      styleClass="rounded-button"/>
                 </h:form>
 
                 <br/>
 
-                <h:form rendered="#{!panelUiController.isOperatorActive()}">
-                    <h:commandButton action="#{panelUiController.setOperatorActive(true)}"
+                <h:form rendered="#{!panelBean.isOperatorActive()}">
+                    <h:commandButton action="#{panelBean.setOperatorActive(true)}"
                                      value="Начать рабочий день"
                                      styleClass="rounded-button"/>
                 </h:form>
 
                 <br/>
 
-                <h:form rendered="#{panelUiController.isOperatorActive()}">
-                    <h:commandButton action="#{panelUiController.stopWork()}"
+                <h:form rendered="#{panelBean.isOperatorActive()}">
+                    <h:commandButton action="#{panelBean.stopWork()}"
                                      value="Закончить работу"
                                      styleClass="rounded-button"/>
                 </h:form>
@@ -83,7 +83,7 @@
         <p:panel header="Личные настройки">
             <div class="card" style="display: inline-block;">
                 <h5>Все специализации:</h5>
-                <p:orderList value="#{panelUiController.getSpecializations()}"
+                <p:orderList value="#{panelBean.getSpecializations()}"
                              var="specialization"
                              controlsLocation="none"
                              itemLabel="#{specialization}"
@@ -91,7 +91,7 @@
             </div>
             <div class="card" style="display: inline-block;">
                 <h5>Ваши специализации:</h5>
-                <p:orderList value="#{panelUiController.getCurrentOperatorSpecializations()}"
+                <p:orderList value="#{panelBean.getCurrentOperatorSpecializations()}"
                              var="specialization"
                              controlsLocation="none"
                              itemLabel="#{specialization}"
