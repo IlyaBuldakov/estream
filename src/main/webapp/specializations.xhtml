@@ -8,31 +8,52 @@
 <h:head>
 </h:head>
 
+<script type="text/javascript">
+    function checkAccepted() {
+        $.ajax({
+            url: "/checkAccepted",
+            dataType: "json",
+            success: function (result) {
+                if (result.accepted) {
+                    window.location.href = "/serve";
+                    return 0;
+                } else {
+                    setTimeout(checkAccepted, 1000); // повторить через 1 секунду
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+                setTimeout(checkAccepted, 1000); // повторить через 1 секунду
+            }
+        });
+    }
+</script>
+
 <div class="card">
     <h1>EStream</h1>
     <p:tabMenu>
         <p:menuitem value="Специализации" action="specializations"/>
     </p:tabMenu>
 
-    <h:form rendered="#{specializationUiController.isSpecializationChosen()}">
+    <h:form rendered="#{specializationBean.isSpecializationChosen()}">
+        <script type="text/javascript">
+            checkAccepted();
+        </script>
         <p:card style="width: 25rem; margin: 5rem auto 0;">
             <f:facet name="title">
-                #{specializationUiController.getActiveSpecializationName()}
+                #{specializationBean.getActiveSpecializationName()}
             </f:facet>
             <p>Вы выбрали специализацию. Ваш талон: </p><br/>
-            <p>#{specializationUiController.getUserQueueCode()}</p>
-            <h:commandButton type="submit" action="#{specializationUiController.enterQueue()}"
-                             value="Встать в очередь"
-                             styleClass="rounded-button ui-button-danger"/>
+            <p>#{specializationBean.getUserQueueCode()}</p>
         </p:card>
     </h:form>
 
-    <h:form rendered="#{!specializationUiController.isSpecializationChosen()}">
+    <h:form rendered="#{!specializationBean.isSpecializationChosen()}">
         <div class="card">
-            <p:dataTable var="specialization" value="#{specializationUiController.getSpecializations()}">
+            <p:dataTable var="specialization" value="#{specializationBean.getSpecializations()}">
                 <p:column headerText="Выберите интересующую вас специализацию">
                     <h:commandButton value="#{specialization.name}"
-                                     action="#{specializationUiController.chooseSpecialization(specialization)}"
+                                     action="#{specializationBean.chooseSpecialization(specialization)}"
                                      styleClass="rounded-button"/>
                 </p:column>
             </p:dataTable>

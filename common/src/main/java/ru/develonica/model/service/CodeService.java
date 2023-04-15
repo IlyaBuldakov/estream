@@ -4,6 +4,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import ru.develonica.model.mapper.CodeMapper;
 import ru.develonica.model.repository.CodeRepository;
@@ -14,6 +16,8 @@ import ru.develonica.model.repository.CodeRepository;
 @Service
 public class CodeService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CodeService.class);
+
     /**
      * Алфавит из которого берутся буквы кода.
      */
@@ -23,6 +27,8 @@ public class CodeService {
      * SQL-запрос для выполнения процедуры создания последовательности.
      */
     private static final String CALL_SEQ_GENERATION_PROCEDURE_QUERY = "call generate_sequence(?)";
+
+    private static final String CALL_SEQ_DROP_PROCEDURE_QUERY = "call drop_sequence(?)";
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -39,6 +45,12 @@ public class CodeService {
         this.codeResolver = codeResolver;
     }
 
+    /**
+     * Метод создания кода пользователя в очереди по имени специализации.
+     *
+     * @param specializationName Имя специализации.
+     * @return Код пользователя в очереди.
+     */
     public String createUserQueueCode(String specializationName) {
         CodeMapper codeMapper = this.codeRepository.findBySequenceName(specializationName);
         return this.codeResolver.resolve(codeMapper);
@@ -60,15 +72,29 @@ public class CodeService {
         createCodeMapping(specializationName);
     }
 
+    @Transactional
+    public void deleteCodeEntry(String specializationName) {
+        dropSequence(specializationName);
+        deleteCodeMapping(specializationName);
+    }
+
     /**
      * Метод создания одноименной последовательности для специализации.
      *
      * @param specializationName Имя специализации.
      */
     private void generateSequence(String specializationName) {
-        Query query = entityManager.createNativeQuery(CALL_SEQ_GENERATION_PROCEDURE_QUERY);
+        Query query = this.entityManager.createNativeQuery(CALL_SEQ_GENERATION_PROCEDURE_QUERY);
         query.setParameter(1, specializationName);
         query.executeUpdate();
+        LOG.info("Создана последовательность %s".formatted(specializationName));
+    }
+
+    public void dropSequence(String specializationName) {
+        Query query = this.entityManager.createNativeQuery(CALL_SEQ_DROP_PROCEDURE_QUERY);
+        query.setParameter(1, specializationName);
+        query.executeUpdate();
+        LOG.info("Удалена последовательность %s".formatted(specializationName));
     }
 
     /**
@@ -81,6 +107,16 @@ public class CodeService {
     private void createCodeMapping(String specializationName) {
         double randomDouble = Math.random() / Math.nextDown(1.0);
         int randomIntResult = (int) ((1.0 - randomDouble) + ALPHABET.length * randomDouble);
-        codeRepository.save(new CodeMapper(ALPHABET[randomIntResult], specializationName));
+        CodeMapper codeMapper = new CodeMapper(ALPHABET[randomIntResult], specializationName);
+        this.codeRepository.save(codeMapper);
+        LOG.info("Специализации \"%s\" выдана буква %s"
+                .formatted(specializationName, codeMapper.getCodeLetter()));
+    }
+
+    private void deleteCodeMapping(String specializationName) {
+        CodeMapper codeMapper = this.codeRepository.findBySequenceName(specializationName);
+        this.codeRepository.delete(codeMapper);
+        LOG.info("Запись о коде %s с последовательностью %s была удалена"
+                .formatted(codeMapper.getCodeLetter(), codeMapper.getSequenceName()));
     }
 }

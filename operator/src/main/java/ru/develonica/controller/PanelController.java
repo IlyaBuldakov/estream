@@ -72,6 +72,7 @@ public class PanelController {
     @PostMapping("/delete-specialization")
     public String deleteSpecialization(@RequestParam String specializationName) {
         this.specializationService.deleteSpecialization(specializationName);
+        this.codeService.deleteCodeEntry(specializationName);
         return "redirect:/panel";
     }
 

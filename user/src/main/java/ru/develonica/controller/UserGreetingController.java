@@ -3,7 +3,7 @@ package ru.develonica.controller;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import ru.develonica.controller.ui.SpecializationUiController;
+import ru.develonica.controller.ui.SpecializationBean;
 
 /**
  * Welcome page контроллер.
@@ -12,10 +12,10 @@ import ru.develonica.controller.ui.SpecializationUiController;
 @RequestMapping("/")
 public class UserGreetingController {
 
-    private final SpecializationUiController specializationUiController;
+    private final SpecializationBean specializationBean;
 
-    public UserGreetingController(SpecializationUiController specializationUiController) {
-        this.specializationUiController = specializationUiController;
+    public UserGreetingController(SpecializationBean specializationBean) {
+        this.specializationBean = specializationBean;
     }
 
     /**
@@ -25,7 +25,7 @@ public class UserGreetingController {
      */
     @GetMapping
     public String getGreetingPage() {
-        this.specializationUiController.resetSessionInfo();
+        this.specializationBean.resetSessionInfo();
         return "specializations.xhtml";
     }
 }

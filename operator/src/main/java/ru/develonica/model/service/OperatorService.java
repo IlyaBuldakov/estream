@@ -22,12 +22,12 @@ public class OperatorService {
 
     private final OperatorRepository operatorRepository;
 
-    private final QueuePotentialPairHolder queuePotentialPairHolder;
+    private final QueuePairHolder queuePairHolder;
 
     public OperatorService(OperatorRepository operatorRepository,
-                           QueuePotentialPairHolder queuePotentialPairHolder) {
+                           QueuePairHolder queuePairHolder) {
         this.operatorRepository = operatorRepository;
-        this.queuePotentialPairHolder = queuePotentialPairHolder;
+        this.queuePairHolder = queuePairHolder;
     }
 
     /**
@@ -39,7 +39,7 @@ public class OperatorService {
      */
     public Optional<QueueEntryData> getRequestFromQueue(Operator currentOperator) {
         Queue<SpecializationQueueEntryDataPair> specMap
-                = this.queuePotentialPairHolder.getQueue();
+                = this.queuePairHolder.getWaitQueue();
         List<SpecializationMapper> operatorSpecializations = currentOperator.getSpecializations();
         for (int i = 0; i < specMap.size(); i++) {
             SpecializationQueueEntryDataPair peekedEntry = specMap.peek();
@@ -128,7 +128,7 @@ public class OperatorService {
      * @return Boolean - удалось ли принять.
      */
     public boolean acceptPair(QueueEntryData queueEntryData, Operator currentOperator) {
-        return this.queuePotentialPairHolder.acceptPair(queueEntryData, currentOperator);
+        return this.queuePairHolder.acceptPair(queueEntryData, currentOperator);
     }
 
     /**

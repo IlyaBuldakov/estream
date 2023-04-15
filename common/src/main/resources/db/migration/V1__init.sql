@@ -56,17 +56,20 @@ create table if not exists code
 /*
  ********* Процедуры *********
  */
-
-/*
- Процедура генерации последовательностей. Создает последовательности
- для каждой специализации. В качестве имени последовательности
- используется имя специализации (specialization_name).
- */
 create or replace procedure generate_sequence(specialization_name varchar)
     language plpgsql
 as
 $$
 begin
     EXECUTE 'CREATE SEQUENCE "' || specialization_name || '"';
+end
+$$;
+
+create or replace procedure drop_sequence(specialization_name varchar)
+    language plpgsql
+as
+$$
+begin
+    EXECUTE 'DROP SEQUENCE "' || specialization_name || '"';
 end
 $$;

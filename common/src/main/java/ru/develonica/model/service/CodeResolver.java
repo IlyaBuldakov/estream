@@ -38,7 +38,7 @@ public class CodeResolver {
     public String resolve(CodeMapper codeMapper) {
         StringBuilder sb = new StringBuilder();
         String sql = String.format(LAST_SEQ_ELEM_QUERY, codeMapper.getSequenceName());
-        Query query = entityManager.createNativeQuery(sql);
+        Query query = this.entityManager.createNativeQuery(sql);
         BigInteger result = (BigInteger) query.getSingleResult();
 
         sb.append(codeMapper.getCodeLetter());

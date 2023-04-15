@@ -17,12 +17,12 @@ public class QueueService {
 
     private final QueueRepository queueRepository;
 
-    private final QueuePotentialPairHolder queuePotentialPairHolder;
+    private final QueuePairHolder queuePairHolder;
 
     public QueueService(QueueRepository queueRepository,
-                        QueuePotentialPairHolder queuePotentialPairHolder) {
+                        QueuePairHolder queuePairHolder) {
         this.queueRepository = queueRepository;
-        this.queuePotentialPairHolder = queuePotentialPairHolder;
+        this.queuePairHolder = queuePairHolder;
     }
 
     /**
@@ -30,7 +30,7 @@ public class QueueService {
      * пользователе и его выборе в очередь).
      */
     public void enterQueue(QueueEntryData queueEntryData) {
-        this.queuePotentialPairHolder.putPair(queueEntryData);
+        this.queuePairHolder.putPairInWaitQueue(queueEntryData);
     }
 
     /**
@@ -105,6 +105,6 @@ public class QueueService {
      * @return Оператор в {@link Optional}.
      */
     public Optional<Operator> checkAccept(QueueEntryData queueEntryData) {
-        return this.queuePotentialPairHolder.checkAccept(queueEntryData);
+        return this.queuePairHolder.checkAccept(queueEntryData);
     }
 }

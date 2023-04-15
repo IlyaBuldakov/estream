@@ -6,6 +6,8 @@ import javax.faces.bean.ManagedBean;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -14,7 +16,6 @@ import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.service.OperatorService;
-import ru.develonica.model.service.QueuePotentialPairHolder;
 import ru.develonica.model.service.SpecializationService;
 import ru.develonica.security.OperatorDetails;
 
@@ -25,6 +26,8 @@ import ru.develonica.security.OperatorDetails;
 @SessionScope
 @Component
 public class PanelUiController extends AbstractUiController {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PanelUiController.class);
 
     @PersistenceContext
     private final EntityManager entityManager;
@@ -109,14 +112,16 @@ public class PanelUiController extends AbstractUiController {
      */
     public String setOperatorActive(boolean value) {
         this.operatorService.setOperatorActive(this.currentOperator, value);
+        LOG.info("Переключатель активности оператора %s приобрел новое значение - %s"
+                .formatted(this.currentOperator.getId(), value));
         this.loadOperator();
         return "panel.xhtml";
     }
 
     /**
-     * Метод получения запроса от пользователя, которому подходит текущий оператор.
-     * Проверяет, есть ли в словаре {@link QueuePotentialPairHolder} запись от пользователя,
-     * соответствующая текущему оператору.
+     * Метод получения запроса от пользователя. Проверяет, есть ли
+     * в очереди ожидания запрос от пользователя, который
+     * может обслужить текущий оператор.
      */
     public void getRequestFromQueue() {
         Optional<QueueEntryData> queueEntryDataOptional
@@ -124,8 +129,11 @@ public class PanelUiController extends AbstractUiController {
         if (queueEntryDataOptional.isPresent()) {
             QueueEntryData queueEntryData = queueEntryDataOptional.get();
             this.specializationFromRequest = queueEntryData.getSpecialization();
-            thereIsUserToServe(true);
+            this.thereIsUserToServe(true);
             this.queueEntryData = queueEntryData;
+            LOG.info("Оператору %s предложен пользователь %s"
+                    .formatted(this.currentOperator.getId(),
+                            this.queueEntryData.getUserQueueCode()));
         }
     }
 
@@ -133,10 +141,11 @@ public class PanelUiController extends AbstractUiController {
      * Метод принятия пользователя оператором.
      */
     public void acceptUser() {
-        if (this.operatorService
-                .acceptPair(this.queueEntryData, this.currentOperator)) {
-            this.operatorService
-                    .setUserUuid(this.currentOperator, Optional.of(this.queueEntryData.getUserUUID()));
+        if (this.operatorService.acceptPair(this.queueEntryData, this.currentOperator)) {
+            this.operatorService.setUserUuid(this.currentOperator,
+                    Optional.of(this.queueEntryData.getUserUUID()));
+            LOG.info("Оператор %s принял пользователя %s"
+                    .formatted(this.currentOperator.getId(), this.queueEntryData.getUserQueueCode()));
             super.redirect("serve");
             return;
         }
@@ -161,6 +170,7 @@ public class PanelUiController extends AbstractUiController {
         this.queueEntryData = null;
         this.specializationFromRequest = null;
         this.operatorService.setUserUuid(this.currentOperator, Optional.empty());
+        LOG.info("Оператор %s закончил работу".formatted(this.currentOperator.getId()));
         return "panel.xhtml?faces-redirect=true";
     }
 

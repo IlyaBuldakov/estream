@@ -6,23 +6,27 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+import org.primefaces.shaded.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.annotation.SessionScope;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
 import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.service.CodeService;
+import ru.develonica.model.service.QueuePairHolder;
 import ru.develonica.model.service.QueueService;
 import ru.develonica.model.service.SpecializationService;
 
 /**
  * UI контроллер для обработки ввода на странице специализаций.
  */
-@ManagedBean(name = "specializationUiController")
-@SessionScope
+@ManagedBean(name = "specializationBean")
+@ViewScoped
 @Component
-public class SpecializationUiController extends AbstractUiController {
+public class SpecializationBean extends AbstractUiController {
 
     private final QueueService queueService;
 
@@ -42,13 +46,18 @@ public class SpecializationUiController extends AbstractUiController {
     private boolean queueRegistered;
 
     /**
+     * Переключатель "принят ли пользователь (оператором)"
+     */
+    private boolean userAccepted;
+
+    /**
      * Информация о текущем пользователе и его выборе.
      */
     private QueueEntryData queueEntryData;
 
-    public SpecializationUiController(QueueService queueService,
-                                      SpecializationService specializationService,
-                                      CodeService codeService) {
+    public SpecializationBean(QueueService queueService,
+                              SpecializationService specializationService,
+                              CodeService codeService) {
         this.queueService = queueService;
         this.specializationService = specializationService;
         this.codeService = codeService;
@@ -66,6 +75,7 @@ public class SpecializationUiController extends AbstractUiController {
         this.queueEntryData.setUserQueueCode(
                 this.codeService.createUserQueueCode(
                         this.queueEntryData.getSpecialization().getName()));
+        this.enterQueue();
         return "specializations.xhtml";
     }
 
@@ -79,23 +89,26 @@ public class SpecializationUiController extends AbstractUiController {
             this.queueRegistered = true;
         }
         this.queueService.enterQueue(this.queueEntryData);
-        this.checkAccept();
     }
 
     /**
-     * Метод проверки (цикл) на факт того, принят ли пользователь оператором.
+     * Метод установки данных для обслуживания, если оператор назначен (пользователь принят этим оператором).
      */
-    public void checkAccept() {
-        while (true) {
-            Optional<Operator> operatorOptional = this.queueService.checkAccept(this.queueEntryData);
-            if (operatorOptional.isPresent()) {
-                UUID userUUID = this.queueEntryData.getUserUUID();
-                this.queueService.setOperator(userUUID, operatorOptional);
-                this.queueService.setDateStart(userUUID, Timestamp.from(Instant.now()));
-                super.redirect("serve");
-                return;
-            }
+    public void checkAccepted() {
+        Optional<Operator> operatorOptional = this.queueService.checkAccept(this.queueEntryData);
+        if (operatorOptional.isPresent()) {
+            UUID userUUID = this.queueEntryData.getUserUUID();
+            this.queueService.setOperator(userUUID, operatorOptional);
+            this.queueService.setDateStart(userUUID, Timestamp.from(Instant.now()));
+            this.userAccepted = true;
         }
+    }
+
+    public String getAcceptedAsJson() {
+        this.checkAccepted();
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("accepted", this.userAccepted);
+        return jsonObject.toString();
     }
 
     /**
