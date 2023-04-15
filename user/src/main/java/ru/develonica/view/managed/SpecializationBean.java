@@ -99,6 +99,8 @@ public class SpecializationBean extends AbstractUiController {
             this.queueService.setOperator(userUUID, operatorOptional);
             this.queueService.setDateStart(userUUID, Timestamp.from(Instant.now()));
             this.userAccepted = true;
+        } else {
+            this.userAccepted = false;
         }
     }
 
