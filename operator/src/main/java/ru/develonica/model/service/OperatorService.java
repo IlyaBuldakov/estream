@@ -1,5 +1,7 @@
 package ru.develonica.model.service;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
@@ -10,8 +12,10 @@ import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
 import ru.develonica.model.SpecializationQueueEntryDataPair;
 import ru.develonica.model.mapper.OperatorMapper;
+import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.repository.OperatorRepository;
+import ru.develonica.model.repository.QueueRepository;
 import ru.develonica.security.OperatorDetails;
 
 /**
@@ -22,11 +26,15 @@ public class OperatorService {
 
     private final OperatorRepository operatorRepository;
 
+    private final QueueRepository queueRepository;
+
     private final QueuePairHolder queuePairHolder;
 
     public OperatorService(OperatorRepository operatorRepository,
+                           QueueRepository queueRepository,
                            QueuePairHolder queuePairHolder) {
         this.operatorRepository = operatorRepository;
+        this.queueRepository = queueRepository;
         this.queuePairHolder = queuePairHolder;
     }
 
@@ -54,7 +62,7 @@ public class OperatorService {
      * Метод установки переключателя "активен ли оператор".
      *
      * @param operator Оператор.
-     * @param value Новое значение "активен ли оператор".
+     * @param value    Новое значение "активен ли оператор".
      */
     public void setOperatorActive(Operator operator, boolean value) {
         Optional<OperatorMapper> operatorMapperOptional
@@ -123,7 +131,7 @@ public class OperatorService {
     /**
      * Метод принятия пользователя.
      *
-     * @param queueEntryData Информация о пользователе и его выборе.
+     * @param queueEntryData  Информация о пользователе и его выборе.
      * @param currentOperator Текущий оператор.
      * @return Boolean - удалось ли принять.
      */
@@ -139,5 +147,28 @@ public class OperatorService {
      */
     public OperatorMapper getByEmail(String email) {
         return this.operatorRepository.getByEmail(email);
+    }
+
+    /**
+     * Метод получения статистики оператора по его идентификатору.
+     *
+     * @param operatorId Идентификатор оператора.
+     * @return HashMap. Ключ - идентификатор специализации,
+     * значение - количество обслуженных пользователей по этой специализации.
+     */
+    public HashMap<Long, Integer> getSpecializationStatsByOperatorId(long operatorId) {
+        List<Long> specializationsServedByOperator = this.queueRepository
+                .getQueueMappersByOperatorId(operatorId)
+                .stream()
+                .map(QueueMapper::getSpecializationId).toList();
+        HashMap<Long, Integer> resultMap = new HashMap<>();
+
+        for (Long specializationId : specializationsServedByOperator) {
+            resultMap.put(
+                    specializationId,
+                    Collections.frequency(specializationsServedByOperator, specializationId)
+            );
+        }
+        return resultMap;
     }
 }
