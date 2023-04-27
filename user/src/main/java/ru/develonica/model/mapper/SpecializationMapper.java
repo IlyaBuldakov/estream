@@ -60,4 +60,8 @@ public class SpecializationMapper {
         result = 31 * result + name.hashCode();
         return result;
     }
+
+    public Long getId() {
+        return id;
+    }
 }
