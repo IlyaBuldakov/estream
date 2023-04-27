@@ -95,6 +95,7 @@ public class QueueService {
         QueueMapper queueMapper = new QueueMapper();
         queueMapper.setId(queueEntryData.getUserUUID());
         queueMapper.setUserQueueCode(queueEntryData.getUserQueueCode());
+        queueMapper.setSpecializationId(queueEntryData.getSpecialization().getId());
         this.queueRepository.save(queueMapper);
     }
 
