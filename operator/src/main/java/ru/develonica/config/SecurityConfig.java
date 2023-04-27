@@ -18,6 +18,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String PANEL_PATH = "/panel";
 
+    private static final String[] AUTHENTICATED_PATHS = {PANEL_PATH, "/stat"};
+
     private static final String LOGOUT_URL = "/logout";
 
     private static final String LOGIN_URL = "/login";
@@ -27,7 +29,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests(config -> config
-                        .antMatchers(PANEL_PATH).authenticated()
+                        .antMatchers(AUTHENTICATED_PATHS).authenticated()
                         .anyRequest().permitAll())
                 .logout(config -> config
                         .logoutUrl(LOGOUT_URL).permitAll()
