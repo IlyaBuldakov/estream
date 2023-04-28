@@ -52,8 +52,8 @@ public class QueueMapper {
     @Column(name = "date_finish")
     private Timestamp dateFinish;
 
-    @Column(name = "specialization_id")
-    private long specializationId;
+    @Column(name = "specialization")
+    private String specializationName;
 
     public QueueMapper() {
         this.dateCreate = Timestamp.from(Instant.now());
@@ -79,11 +79,11 @@ public class QueueMapper {
         this.userQueueCode = userQueueCode;
     }
 
-    public long getSpecializationId() {
-        return specializationId;
+    public String getSpecializationName() {
+        return specializationName;
     }
 
-    public void setSpecializationId(long specializationId) {
-        this.specializationId = specializationId;
+    public void setSpecializationName(String specializationName) {
+        this.specializationName = specializationName;
     }
 }
