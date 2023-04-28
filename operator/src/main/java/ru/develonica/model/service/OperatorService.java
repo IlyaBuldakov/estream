@@ -1,7 +1,7 @@
 package ru.develonica.model.service;
 
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Queue;
@@ -152,21 +152,25 @@ public class OperatorService {
     /**
      * Метод получения статистики оператора по его идентификатору.
      *
-     * @param operatorId Идентификатор оператора.
-     * @return HashMap. Ключ - идентификатор специализации,
+     * @param operator Оператор.
+     * @return LinkedHashMap. Ключ - идентификатор специализации,
      * значение - количество обслуженных пользователей по этой специализации.
      */
-    public HashMap<Long, Integer> getSpecializationStatsByOperatorId(long operatorId) {
-        List<Long> specializationsServedByOperator = this.queueRepository
-                .getQueueMappersByOperatorId(operatorId)
+    public LinkedHashMap<String, Integer> getSpecializationStatsByOperator(Operator operator) {
+        List<String> specializationsServedByOperator = this.queueRepository
+                .getQueueMappersByOperatorId(operator.getId())
                 .stream()
-                .map(QueueMapper::getSpecializationId).toList();
-        HashMap<Long, Integer> resultMap = new HashMap<>();
+                .map(QueueMapper::getSpecializationName).toList();
+        List<String> allSpecializations = operator.getSpecializations()
+                .stream()
+                .map(SpecializationMapper::getName)
+                .toList();
+        LinkedHashMap<String, Integer> resultMap = new LinkedHashMap<>();
 
-        for (Long specializationId : specializationsServedByOperator) {
+        for (String specializationName : allSpecializations) {
             resultMap.put(
-                    specializationId,
-                    Collections.frequency(specializationsServedByOperator, specializationId)
+                    specializationName,
+                    Collections.frequency(specializationsServedByOperator, specializationName)
             );
         }
         return resultMap;
