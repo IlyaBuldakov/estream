@@ -43,7 +43,7 @@ public class PanelController {
                 (Operator) (SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         this.panelBean.setOperator(currentOperator);
         this.panelBean.resetSessionInfo();
-        return "panel.xhtml";
+        return "panel.xhtml?i=1";
     }
 
     /*

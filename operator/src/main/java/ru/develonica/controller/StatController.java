@@ -17,6 +17,6 @@ public class StatController {
      */
     @GetMapping
     public String getStat() {
-        return "stat.xhtml";
+        return "stat.xhtml?i=2";
     }
 }
