@@ -1,4 +1,4 @@
-package ru.develonica.controller.ui;
+package ru.develonica.model.managed;
 
 
 import java.io.IOException;
@@ -8,7 +8,7 @@ import ru.develonica.model.exception.ApplicationException;
 /**
  * Абстрактный класс UI контроллера.
  */
-public abstract class AbstractUiController {
+public abstract class AbstractBean {
 
     /**
      * Метод редиректа.

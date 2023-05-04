@@ -1,16 +1,16 @@
-package ru.develonica.controller.ui;
+package ru.develonica.model.managed;
 
 import javax.faces.bean.ManagedBean;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 
 /**
- * UI контроллер для обработки ввода пользователя на странице обслуживания.
+ * Managed bean для обработки ввода пользователя на странице обслуживания.
  */
-@ManagedBean(name = "serveUiController")
+@ManagedBean(name = "serveBean")
 @SessionScope
 @Component
-public class ServeUiController extends AbstractUiController {
+public class ServeBean extends AbstractBean {
 
     /**
      * Сюда устанавливается значение true в том случае если
