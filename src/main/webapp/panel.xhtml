@@ -45,7 +45,9 @@
                 <h:form rendered="#{panelBean.isOperatorActive()}">
                     <p:commandButton ajax="false"
                                      action="#{panelBean.getRequestFromQueue()}"
-                                     value="Получить пользователя"/>
+                                     value="Получить пользователя">
+                        <f:param name="i" value="1"/>
+                    </p:commandButton>
                 </h:form>
 
                 <br/>
@@ -54,7 +56,9 @@
                     <p:commandButton ajax="false"
                                      action="#{panelBean.setOperatorActive(true)}"
                                      value="Начать рабочий день"
-                                     styleClass="ui-button-success"/>
+                                     styleClass="ui-button-success">
+                        <f:param name="i" value="1"/>
+                    </p:commandButton>
                 </h:form>
 
                 <br/>
@@ -63,7 +67,9 @@
                     <p:commandButton ajax="false"
                                      action="#{panelBean.stopWork()}"
                                      value="Закончить работу"
-                                     styleClass="ui-button-danger"/>
+                                     styleClass="ui-button-danger">
+                        <f:param name="i" value="1"/>
+                    </p:commandButton>
                 </h:form>
             </p>
         </p:panel>
