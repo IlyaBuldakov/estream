@@ -12,7 +12,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
-import ru.develonica.controller.ui.AbstractUiController;
+import ru.develonica.model.managed.BaseManagedBean;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
 import ru.develonica.model.mapper.SpecializationMapper;
@@ -26,7 +26,7 @@ import ru.develonica.security.OperatorDetails;
 @ManagedBean(name = "panelBean")
 @SessionScope
 @Component
-public class PanelBean extends AbstractUiController {
+public class PanelBean extends BaseManagedBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(PanelBean.class);
 

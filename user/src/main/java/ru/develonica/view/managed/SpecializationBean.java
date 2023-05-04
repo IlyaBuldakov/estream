@@ -9,7 +9,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import org.primefaces.shaded.json.JSONObject;
 import org.springframework.stereotype.Component;
-import ru.develonica.controller.ui.AbstractUiController;
+import ru.develonica.model.managed.BaseManagedBean;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
 import ru.develonica.model.mapper.QueueMapper;
@@ -24,7 +24,7 @@ import ru.develonica.model.service.SpecializationService;
 @ManagedBean(name = "specializationBean")
 @ViewScoped
 @Component
-public class SpecializationBean extends AbstractUiController {
+public class SpecializationBean extends BaseManagedBean {
 
     private final QueueService queueService;
 

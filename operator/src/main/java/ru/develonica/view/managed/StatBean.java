@@ -11,15 +11,15 @@ import org.primefaces.model.charts.pie.PieChartModel;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
-import ru.develonica.controller.ui.AbstractUiController;
 import ru.develonica.model.Operator;
+import ru.develonica.model.managed.BaseManagedBean;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.service.OperatorService;
 
 @ManagedBean(name = "statBean")
 @SessionScope
 @Component
-public class StatBean extends AbstractUiController {
+public class StatBean extends BaseManagedBean {
 
     private final OperatorService operatorService;
 

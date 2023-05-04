@@ -10,7 +10,7 @@ import org.springframework.web.context.annotation.SessionScope;
 @ManagedBean(name = "serveBean")
 @SessionScope
 @Component
-public class ServeBean extends AbstractBean {
+public class ServeBean extends BaseManagedBean {
 
     /**
      * Сюда устанавливается значение true в том случае если
