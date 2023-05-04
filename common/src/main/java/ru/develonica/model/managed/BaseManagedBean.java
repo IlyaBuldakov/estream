@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 import ru.develonica.model.exception.ApplicationException;
-import ru.develonica.model.service.ClientDataService;
+import ru.develonica.model.service.ClientRequestDataService;
 
 /**
  * Базовый класс для managed бинов.
@@ -19,11 +19,11 @@ import ru.develonica.model.service.ClientDataService;
 public class BaseManagedBean {
 
     @Autowired
-    private ClientDataService clientDataService;
+    private ClientRequestDataService clientRequestDataService;
 
     /**
      * Метод определения, является ли пользователь оператором.
-     * Для этого используется {@link ClientDataService},
+     * Для этого используется {@link ClientRequestDataService},
      * который проверяет клиента на факт аутентификации.
      *
      * Это нужно для отображения соответствующих компонентов представления,
@@ -32,7 +32,7 @@ public class BaseManagedBean {
      * @return Boolean - является ли пользователь оператором.
      */
     public boolean isOperator() {
-        return this.clientDataService.isAuthenticated();
+        return this.clientRequestDataService.isAuthenticated();
     }
 
     /**

@@ -9,25 +9,30 @@ import org.springframework.web.context.annotation.RequestScope;
 
 /**
  * Вспомогательный сервис для определения данных о клиенте.
+ * Хранит объект {@link Authentication аутентификации} клиента в рамках запроса.
  */
 @Component
 @RequestScope
-public class ClientDataService {
+public class ClientRequestDataService {
 
     private final SecurityContext securityContext = SecurityContextHolder.getContext();
 
-    private Authentication activeClientAuthentication;
-
+    /**
+     * Поле с объектом аутентификации клиента.
+     * <p>
+     * Тип аутентификации будет сохранен в этом поле
+     * и будет всегда актуален в рамках запроса, освобождая от
+     * необходимости обращаться к {@link SecurityContext} повторно,
+     * когда эта информация используется несколько раз.
+     */
+    private final Authentication activeClientAuthentication
+            = this.securityContext.getAuthentication();
     /**
      * Метод проверки клиента на факт аутентификации.
-     * Хранит объект {@link Authentication аутентификации} в рамках запроса.
      *
      * @return Boolean - аутентифицирован ли пользователь.
      */
     public boolean isAuthenticated() {
-        if (this.activeClientAuthentication == null) {
-            this.activeClientAuthentication = this.securityContext.getAuthentication();
-        }
         return !(this.activeClientAuthentication instanceof AnonymousAuthenticationToken);
     }
 }
