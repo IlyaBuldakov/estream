@@ -31,8 +31,16 @@
 
 <div class="card">
     <h1><a href="/">EStream</a></h1>
-    <p:tabMenu>
-        <p:menuitem value="Специализации" action="specializations"/>
+    <p:tabMenu activeIndex="#{param.i}">
+        <p:menuitem value="Специализации" url="/">
+            <f:param name="i" value="0"/>
+        </p:menuitem>
+        <p:menuitem rendered="#{baseManagedBean.isOperator()}" value="Панель оператора" url="/panel">
+            <f:param name="i" value="1"/>
+        </p:menuitem>
+        <p:menuitem rendered="#{baseManagedBean.isOperator()}" value="Статистика" url="/stat">
+            <f:param name="i" value="2"/>
+        </p:menuitem>
     </p:tabMenu>
     <h:form rendered="#{specializationBean.isSpecializationChosen()}">
         <script type="text/javascript">
