@@ -18,20 +18,21 @@ import ru.develonica.model.service.ClientRequestDataService;
 @Component
 public class BaseManagedBean {
 
+    /**
+     * Класс, позволяющий определить данные о клиенте в рамках запроса.
+     */
     @Autowired
     private ClientRequestDataService clientRequestDataService;
 
     /**
-     * Метод определения, является ли пользователь оператором.
-     * Для этого используется {@link ClientRequestDataService},
-     * который проверяет клиента на факт аутентификации.
+     * Метод определения аутентифицирован ли пользователь.
      *
      * Это нужно для отображения соответствующих компонентов представления,
      * доступных только операторам.
      *
      * @return Boolean - является ли пользователь оператором.
      */
-    public boolean isOperator() {
+    public boolean isAuthenticated() {
         return this.clientRequestDataService.isAuthenticated();
     }
 

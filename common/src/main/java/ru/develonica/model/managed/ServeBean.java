@@ -22,19 +22,4 @@ public class ServeBean extends BaseManagedBean {
     public void setIsOperator(boolean isOperator) {
         this.isOperator = isOperator;
     }
-
-    public boolean isOperator() {
-        return this.isOperator;
-    }
-
-    /**
-     * Метод обрабатывающий прекращение обслуживания.
-     */
-    public void stopServing() {
-        if (this.isOperator) {
-            super.redirect("panel");
-        } else {
-            super.redirect("/");
-        }
-    }
 }
