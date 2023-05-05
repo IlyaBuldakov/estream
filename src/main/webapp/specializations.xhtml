@@ -41,6 +41,7 @@
         <p:menuitem rendered="#{baseManagedBean.isOperator()}" value="Статистика" url="/stat">
             <f:param name="i" value="2"/>
         </p:menuitem>
+        <p:menuitem rendered="#{baseManagedBean.isOperator()}" value="Выйти" url="/logout"/>
     </p:tabMenu>
     <h:form rendered="#{specializationBean.isSpecializationChosen()}">
         <script type="text/javascript">
