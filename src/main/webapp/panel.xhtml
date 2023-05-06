@@ -14,13 +14,13 @@
         <p:menuitem value="Специализации" url="/">
             <f:param name="i" value="0"/>
         </p:menuitem>
-        <p:menuitem rendered="#{baseManagedBean.isAuthenticated()}" value="Панель оператора" url="/panel">
+        <p:menuitem value="Панель оператора" url="/panel">
             <f:param name="i" value="1"/>
         </p:menuitem>
-        <p:menuitem rendered="#{baseManagedBean.isAuthenticated()}" value="Статистика" url="/stat">
+        <p:menuitem value="Статистика" url="/stat">
             <f:param name="i" value="2"/>
         </p:menuitem>
-        <p:menuitem rendered="#{baseManagedBean.isAuthenticated()}" value="Выйти" url="/logout"/>
+        <p:menuitem value="Выйти" url="/logout"/>
     </p:tabMenu>
     <div class="card">
         <p:panel rendered="#{panelBean.isThereUserToServe()}">

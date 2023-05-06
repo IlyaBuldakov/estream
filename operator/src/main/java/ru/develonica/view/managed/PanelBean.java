@@ -9,16 +9,15 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
-import ru.develonica.model.managed.BaseManagedBean;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
+import ru.develonica.model.managed.BaseManagedBean;
 import ru.develonica.model.mapper.SpecializationMapper;
+import ru.develonica.model.service.ClientSessionDataService;
 import ru.develonica.model.service.OperatorService;
 import ru.develonica.model.service.SpecializationService;
-import ru.develonica.security.OperatorDetails;
 
 /**
  * UI контроллер для обработки ввода на странице панели.
@@ -36,6 +35,8 @@ public class PanelBean extends BaseManagedBean {
     private final SpecializationService specializationService;
 
     private final OperatorService operatorService;
+
+    private final ClientSessionDataService clientSessionDataService;
 
     /**
      * Текущий оператор.
@@ -60,10 +61,12 @@ public class PanelBean extends BaseManagedBean {
 
     public PanelBean(EntityManager entityManager,
                      SpecializationService specializationService,
-                     OperatorService operatorService) {
+                     OperatorService operatorService,
+                     ClientSessionDataService clientSessionDataService) {
         this.entityManager = entityManager;
         this.operatorService = operatorService;
         this.specializationService = specializationService;
+        this.clientSessionDataService = clientSessionDataService;
     }
 
     /**
@@ -95,13 +98,10 @@ public class PanelBean extends BaseManagedBean {
      * Метод загрузки оператора из {@link SecurityContext}.
      */
     private void loadOperator() {
-        String currentOperatorEmail =
-                ((OperatorDetails) SecurityContextHolder
-                        .getContext()
-                        .getAuthentication()
-                        .getPrincipal())
-                        .getUsername();
-        this.currentOperator = this.operatorService.getByEmail(currentOperatorEmail);
+        Optional<Operator> operatorFromSecurityContext
+                = this.clientSessionDataService.getOperatorFromContext();
+        operatorFromSecurityContext.ifPresent(operator -> this.currentOperator
+                = this.operatorService.getByEmail(operator.getEmail()));
     }
 
     public void setOperatorActive(boolean value) {
