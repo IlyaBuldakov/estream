@@ -1,5 +1,7 @@
 package ru.develonica.view.managed;
 
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,8 +15,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.annotation.SessionScope;
 import ru.develonica.model.Operator;
 import ru.develonica.model.managed.BaseManagedBean;
+import ru.develonica.model.mapper.ActivityMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
+import ru.develonica.model.service.ActivityService;
 import ru.develonica.model.service.OperatorService;
+import ru.develonica.security.OperatorDetails;
 
 @ManagedBean(name = "statBean")
 @SessionScope
@@ -23,10 +28,29 @@ public class StatBean extends BaseManagedBean {
 
     private final OperatorService operatorService;
 
+    private final ActivityService activityService;
+
     private final List<String> bgColors = new ArrayList<>();
 
-    public StatBean(OperatorService operatorService) {
+    public StatBean(OperatorService operatorService,
+                    ActivityService activityService) {
         this.operatorService = operatorService;
+        this.activityService = activityService;
+    }
+
+    public boolean isWorkSessionEnabled() {
+        OperatorDetails operator =
+                (OperatorDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return this.operatorService.getByEmail(operator.getUsername()).isActive();
+    }
+
+    public long getWorkSessionDurationInMinutes() {
+        ActivityMapper notFinishedActivitySession =
+                this.activityService.findByActivityFinishIsNull();
+        LocalDateTime activityStart = notFinishedActivitySession.getActivityStart();
+        return (LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+                - activityStart.toEpochSecond(ZoneOffset.UTC)) / 60;
+
     }
 
     public PieChartModel createPieModel() {
