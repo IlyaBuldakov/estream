@@ -1,5 +1,6 @@
 package ru.develonica.model.service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import ru.develonica.model.Operator;
 import ru.develonica.model.QueueEntryData;
 import ru.develonica.model.SpecializationQueueEntryDataPair;
+import ru.develonica.model.mapper.ActivityMapper;
 import ru.develonica.model.mapper.OperatorMapper;
 import ru.develonica.model.mapper.QueueMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
@@ -28,13 +30,17 @@ public class OperatorService {
 
     private final QueueRepository queueRepository;
 
+    private final ActivityService activityService;
+
     private final QueuePairHolder queuePairHolder;
 
     public OperatorService(OperatorRepository operatorRepository,
                            QueueRepository queueRepository,
+                           ActivityService activityService,
                            QueuePairHolder queuePairHolder) {
         this.operatorRepository = operatorRepository;
         this.queueRepository = queueRepository;
+        this.activityService = activityService;
         this.queuePairHolder = queuePairHolder;
     }
 
@@ -58,13 +64,26 @@ public class OperatorService {
         return Optional.empty();
     }
 
+    public void activateOperatorWorkSession(Operator operator) {
+        setOperatorActive(operator, true);
+        this.activityService.saveActivity(new ActivityMapper(operator.getId(), LocalDateTime.now()));
+    }
+
+    public void disableOperatorWorkSession(Operator operator) {
+        setOperatorActive(operator, false);
+        ActivityMapper operatorNotFinishedActivity =
+                this.activityService.findByActivityFinishIsNull();
+        operatorNotFinishedActivity.setActivityFinish(LocalDateTime.now());
+        this.activityService.saveActivity(operatorNotFinishedActivity);
+    }
+
     /**
      * Метод установки переключателя "активен ли оператор".
      *
      * @param operator Оператор.
      * @param value    Новое значение "активен ли оператор".
      */
-    public void setOperatorActive(Operator operator, boolean value) {
+    private void setOperatorActive(Operator operator, boolean value) {
         Optional<OperatorMapper> operatorMapperOptional
                 = this.operatorRepository.findById(operator.getId());
         if (operatorMapperOptional.isPresent()) {
@@ -139,12 +158,6 @@ public class OperatorService {
         return this.queuePairHolder.acceptPair(queueEntryData, currentOperator);
     }
 
-    /**
-     * Метод получения оператора по email.
-     *
-     * @param email Электронная почта.
-     * @return {@link OperatorMapper Оператор}.
-     */
     public OperatorMapper getByEmail(String email) {
         return this.operatorRepository.getByEmail(email);
     }

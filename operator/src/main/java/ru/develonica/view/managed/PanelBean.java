@@ -104,19 +104,13 @@ public class PanelBean extends BaseManagedBean {
         this.currentOperator = this.operatorService.getByEmail(currentOperatorEmail);
     }
 
-    /**
-     * Устанавливает переключатель "активен ли оператор" для текущего оператора,
-     * освежает оператора (currentOperator) при помощи {@link #loadOperator()}.
-     *
-     * @param value Значение true/false.
-     * @return Представление с панелью.
-     */
-    public String setOperatorActive(boolean value) {
-        this.operatorService.setOperatorActive(this.currentOperator, value);
-        LOG.info("Переключатель активности оператора %s приобрел новое значение - %s"
-                .formatted(this.currentOperator.getId(), value));
+    public void setOperatorActive(boolean value) {
+        if (value) {
+            this.operatorService.activateOperatorWorkSession(this.currentOperator);
+        } else {
+            this.operatorService.disableOperatorWorkSession(this.currentOperator);
+        }
         this.loadOperator();
-        return "panel.xhtml";
     }
 
     /**
