@@ -16,6 +16,8 @@ public interface Operator {
      */
     Long getId();
 
+    String getEmail();
+
     List<SpecializationMapper> getSpecializations();
 
     boolean isActive();

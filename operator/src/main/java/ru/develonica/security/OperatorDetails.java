@@ -69,6 +69,10 @@ public class OperatorDetails implements UserDetails, Operator {
 
     @Override
     public String getUsername() {
+        return this.getEmail();
+    }
+
+    public String getEmail() {
         return email;
     }
 
