@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.develonica.security.OperatorDetailsService;
 
 /**
  * Конфигурационный класс Spring Security.
@@ -20,6 +21,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String[] AUTHENTICATED_PATHS = {PANEL_PATH, "/stat"};
 
     private static final String LOGIN_URL = "/login";
+
+    private final OperatorDetailsService operatorDetailsService;
+
+    public SecurityConfig(OperatorDetailsService operatorDetailsService) {
+        this.operatorDetailsService = operatorDetailsService;
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -38,6 +45,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .clearAuthentication(true)
                 .deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/")
+                .and()
+                .rememberMe()
+                .alwaysRemember(true)
+                .userDetailsService(this.operatorDetailsService)
                 .and()
                 .httpBasic();
     }
