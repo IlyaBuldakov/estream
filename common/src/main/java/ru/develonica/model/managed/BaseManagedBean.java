@@ -18,19 +18,22 @@ import ru.develonica.model.service.ClientSessionDataService;
 @Component
 public class BaseManagedBean {
 
+    /**
+     * Сервис получения данных о клиенте в рамках текущей сессии.
+     */
     @Autowired
     private ClientSessionDataService clientSessionDataService;
 
     /**
-     * Метод определения аутентифицирован ли пользователь.
+     * Метод определения является ли клиент оператором.
      * <p>
      * Это нужно для отображения соответствующих компонентов представления,
      * доступных только операторам.
      *
      * @return Boolean - является ли пользователь оператором.
      */
-    public boolean isAuthenticated() {
-        return this.clientSessionDataService.getOperatorFromContext().isPresent();
+    public boolean isOperator() {
+        return this.clientSessionDataService.getCurrentSessionOperator().isPresent();
     }
 
     /**

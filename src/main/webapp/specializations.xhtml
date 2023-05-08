@@ -35,16 +35,16 @@
         <p:menuitem value="Специализации" url="/">
             <f:param name="i" value="0"/>
         </p:menuitem>
-        <p:menuitem rendered="#{baseManagedBean.isAuthenticated()}" value="Панель оператора" url="/panel">
+        <p:menuitem rendered="#{baseManagedBean.isOperator()}" value="Панель оператора" url="/panel">
             <f:param name="i" value="1"/>
         </p:menuitem>
-        <p:menuitem rendered="#{!baseManagedBean.isAuthenticated()}" value="Войти" url="/login">
+        <p:menuitem rendered="#{!baseManagedBean.isOperator()}" value="Войти" url="/login">
             <f:param name="i" value="1"/>
         </p:menuitem>
-        <p:menuitem rendered="#{baseManagedBean.isAuthenticated()}" value="Статистика" url="/stat">
+        <p:menuitem rendered="#{baseManagedBean.isOperator()}" value="Статистика" url="/stat">
             <f:param name="i" value="2"/>
         </p:menuitem>
-        <p:menuitem rendered="#{baseManagedBean.isAuthenticated()}" value="Выйти" url="/logout"/>
+        <p:menuitem rendered="#{baseManagedBean.isOperator()}" value="Выйти" url="/logout"/>
     </p:tabMenu>
     <h:form rendered="#{specializationBean.isSpecializationChosen()}">
         <script type="text/javascript">

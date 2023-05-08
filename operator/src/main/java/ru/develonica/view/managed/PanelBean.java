@@ -99,7 +99,7 @@ public class PanelBean extends BaseManagedBean {
      */
     private void loadOperator() {
         Optional<Operator> operatorFromSecurityContext
-                = this.clientSessionDataService.getOperatorFromContext();
+                = this.clientSessionDataService.getCurrentSessionOperator();
         operatorFromSecurityContext.ifPresent(operator -> this.currentOperator
                 = this.operatorService.getByEmail(operator.getEmail()));
     }
