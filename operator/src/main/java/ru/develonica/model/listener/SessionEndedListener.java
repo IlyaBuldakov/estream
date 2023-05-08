@@ -28,8 +28,10 @@ public class SessionEndedListener implements HttpSessionListener {
         HttpSession session = se.getSession();
         SecurityContext context = (SecurityContext) session.getAttribute
                 (HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
-        Authentication authentication = context.getAuthentication();
-        Operator operator = (Operator) authentication.getPrincipal();
-        this.operatorService.disableOperatorWorkSession(operator);
+        if (context != null) {
+            Authentication authentication = context.getAuthentication();
+            Operator operator = (Operator) authentication.getPrincipal();
+            this.operatorService.disableOperatorWorkSession(operator);
+        }
     }
 }
