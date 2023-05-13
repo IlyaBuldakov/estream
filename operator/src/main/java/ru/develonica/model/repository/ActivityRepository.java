@@ -5,5 +5,5 @@ import ru.develonica.model.mapper.ActivityMapper;
 
 public interface ActivityRepository extends JpaRepository<ActivityMapper, Long> {
 
-    ActivityMapper findByActivityFinishIsNull();
+    ActivityMapper findByOperatorIdAndActivityFinishIsNull(long operatorId);
 }

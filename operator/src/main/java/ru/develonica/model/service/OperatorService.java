@@ -34,14 +34,18 @@ public class OperatorService {
 
     private final QueuePairHolder queuePairHolder;
 
+    private final ClientSessionDataService clientSessionDataService;
+
     public OperatorService(OperatorRepository operatorRepository,
                            QueueRepository queueRepository,
                            ActivityService activityService,
-                           QueuePairHolder queuePairHolder) {
+                           QueuePairHolder queuePairHolder,
+                           ClientSessionDataService clientSessionDataService) {
         this.operatorRepository = operatorRepository;
         this.queueRepository = queueRepository;
         this.activityService = activityService;
         this.queuePairHolder = queuePairHolder;
+        this.clientSessionDataService = clientSessionDataService;
     }
 
     /**
@@ -72,7 +76,7 @@ public class OperatorService {
     public void disableOperatorWorkSession(Operator operator) {
         setOperatorActive(operator, false);
         ActivityMapper operatorNotFinishedActivity =
-                this.activityService.findByActivityFinishIsNull();
+                this.activityService.findByOperatorIdAndActivityFinishIsNull(operator.getId());
         operatorNotFinishedActivity.setActivityFinish(LocalDateTime.now());
         this.activityService.saveActivity(operatorNotFinishedActivity);
     }
@@ -91,6 +95,8 @@ public class OperatorService {
             operatorMapper.setActive(value);
             this.operatorRepository.save(operatorMapper);
         }
+        this.clientSessionDataService
+                .refreshOperatorInSecurityContext(sessionOperator -> sessionOperator.setActive(value));
     }
 
     /**
@@ -102,6 +108,9 @@ public class OperatorService {
         OperatorMapper operatorMapper = operatorRepository.getByEmail(getCurrentOperatorEmail());
         operatorMapper.getSpecializations().add(specialization);
         this.operatorRepository.save(operatorMapper);
+        this.clientSessionDataService
+                .refreshOperatorInSecurityContext(sessionOperator
+                        -> sessionOperator.getSpecializations().add(specialization));
     }
 
     /**
@@ -113,6 +122,9 @@ public class OperatorService {
         OperatorMapper operatorMapper = operatorRepository.getByEmail(getCurrentOperatorEmail());
         operatorMapper.getSpecializations().remove(specialization);
         this.operatorRepository.save(operatorMapper);
+        this.clientSessionDataService
+                .refreshOperatorInSecurityContext(sessionOperator
+                        -> sessionOperator.getSpecializations().remove(specialization));
     }
 
     /**

@@ -21,4 +21,6 @@ public interface Operator {
     List<SpecializationMapper> getSpecializations();
 
     boolean isActive();
+
+    void setActive(boolean value);
 }

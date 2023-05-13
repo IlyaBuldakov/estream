@@ -1,6 +1,7 @@
 package ru.develonica.model.service;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -40,5 +41,9 @@ public class ClientSessionDataService {
 
     public Optional<Operator> getCurrentSessionOperator() {
         return currentSessionOperator;
+    }
+
+    public void refreshOperatorInSecurityContext(Consumer<Operator> consumer) {
+        consumer.accept(this.currentSessionOperator.get());
     }
 }

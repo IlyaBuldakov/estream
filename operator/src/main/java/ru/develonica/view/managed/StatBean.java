@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javax.faces.bean.ManagedBean;
 import org.primefaces.model.charts.ChartData;
 import org.primefaces.model.charts.pie.PieChartDataSet;
@@ -18,6 +19,7 @@ import ru.develonica.model.managed.BaseManagedBean;
 import ru.develonica.model.mapper.ActivityMapper;
 import ru.develonica.model.mapper.SpecializationMapper;
 import ru.develonica.model.service.ActivityService;
+import ru.develonica.model.service.ClientSessionDataService;
 import ru.develonica.model.service.OperatorService;
 import ru.develonica.security.OperatorDetails;
 
@@ -32,10 +34,18 @@ public class StatBean extends BaseManagedBean {
 
     private final List<String> bgColors = new ArrayList<>();
 
+    private final ClientSessionDataService clientSessionDataService;
+
+    private Operator currentOperator;
+
     public StatBean(OperatorService operatorService,
-                    ActivityService activityService) {
+                    ActivityService activityService,
+                    ClientSessionDataService clientSessionDataService) {
         this.operatorService = operatorService;
         this.activityService = activityService;
+        this.clientSessionDataService = clientSessionDataService;
+        Optional<Operator> currentSessionOperator = this.clientSessionDataService.getCurrentSessionOperator();
+        currentSessionOperator.ifPresent(operator -> this.currentOperator = operator);
     }
 
     public boolean isWorkSessionEnabled() {
@@ -46,7 +56,7 @@ public class StatBean extends BaseManagedBean {
 
     public long getWorkSessionDurationInMinutes() {
         ActivityMapper notFinishedActivitySession =
-                this.activityService.findByActivityFinishIsNull();
+                this.activityService.findByOperatorIdAndActivityFinishIsNull(this.currentOperator.getId());
         LocalDateTime activityStart = notFinishedActivitySession.getActivityStart();
         return (LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
                 - activityStart.toEpochSecond(ZoneOffset.UTC)) / 60;

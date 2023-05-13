@@ -3,9 +3,6 @@ package ru.develonica.view.managed;
 import java.util.List;
 import java.util.Optional;
 import javax.faces.bean.ManagedBean;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContext;
@@ -28,9 +25,6 @@ import ru.develonica.model.service.SpecializationService;
 public class PanelBean extends BaseManagedBean {
 
     private static final Logger LOG = LoggerFactory.getLogger(PanelBean.class);
-
-    @PersistenceContext
-    private final EntityManager entityManager;
 
     private final SpecializationService specializationService;
 
@@ -59,14 +53,14 @@ public class PanelBean extends BaseManagedBean {
      */
     private SpecializationMapper specializationFromRequest;
 
-    public PanelBean(EntityManager entityManager,
-                     SpecializationService specializationService,
+    public PanelBean(SpecializationService specializationService,
                      OperatorService operatorService,
                      ClientSessionDataService clientSessionDataService) {
-        this.entityManager = entityManager;
         this.operatorService = operatorService;
         this.specializationService = specializationService;
         this.clientSessionDataService = clientSessionDataService;
+        Optional<Operator> currentSessionOperator = this.clientSessionDataService.getCurrentSessionOperator();
+        currentSessionOperator.ifPresent(operator -> this.currentOperator = operator);
     }
 
     /**
@@ -74,14 +68,7 @@ public class PanelBean extends BaseManagedBean {
      *
      * @return Список специализаций.
      */
-    @Transactional
     public List<SpecializationMapper> getCurrentOperatorSpecializations() {
-        this.loadOperator();
-        /*
-        Получение свежего списка специализаций, независимо от
-        того, каким образом они были добавлены в БД.
-         */
-        this.entityManager.refresh(this.currentOperator);
         return this.currentOperator.getSpecializations();
     }
 
@@ -94,23 +81,12 @@ public class PanelBean extends BaseManagedBean {
         return this.specializationService.getSpecializations();
     }
 
-    /**
-     * Метод загрузки оператора из {@link SecurityContext}.
-     */
-    private void loadOperator() {
-        Optional<Operator> operatorFromSecurityContext
-                = this.clientSessionDataService.getCurrentSessionOperator();
-        operatorFromSecurityContext.ifPresent(operator -> this.currentOperator
-                = this.operatorService.getByEmail(operator.getEmail()));
-    }
-
     public void setOperatorActive(boolean value) {
         if (value) {
             this.operatorService.activateOperatorWorkSession(this.currentOperator);
         } else {
             this.operatorService.disableOperatorWorkSession(this.currentOperator);
         }
-        this.loadOperator();
     }
 
     /**
@@ -193,12 +169,10 @@ public class PanelBean extends BaseManagedBean {
 
     /**
      * Проверка - активен ли оператор в данный момент.
-     * Для этого поле currentOperator освежается методом {@link #loadOperator()}
      *
      * @return Активен ли оператор.
      */
     public boolean isOperatorActive() {
-        this.loadOperator();
         return this.currentOperator.isActive();
     }
 

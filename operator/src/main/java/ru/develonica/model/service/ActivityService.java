@@ -17,7 +17,7 @@ public class ActivityService {
         this.activityRepository.save(activityMapper);
     }
 
-    public ActivityMapper findByActivityFinishIsNull() {
-        return this.activityRepository.findByActivityFinishIsNull();
+    public ActivityMapper findByOperatorIdAndActivityFinishIsNull(long operatorId) {
+        return this.activityRepository.findByOperatorIdAndActivityFinishIsNull(operatorId);
     }
 }

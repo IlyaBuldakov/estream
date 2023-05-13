@@ -37,7 +37,7 @@ public class OperatorDetails implements UserDetails, Operator {
     /**
      * Переключатель "активен ли оператор".
      */
-    private final boolean isActive;
+    private boolean isActive;
 
     public OperatorDetails(OperatorMapper operatorMapper) {
         this.id = operatorMapper.getId();
@@ -98,5 +98,9 @@ public class OperatorDetails implements UserDetails, Operator {
 
     public Long getId() {
         return id;
+    }
+
+    public void setActive(boolean value) {
+        this.isActive = value;
     }
 }
